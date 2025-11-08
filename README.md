@@ -141,6 +141,9 @@ npx tsc --noEmit
 ### Build Commands
 
 ```bash
+# Web (for Netlify/web hosting)
+npm run build:web
+
 # Android APK (for testing/sharing)
 npm run build:android:apk
 
@@ -177,6 +180,14 @@ npm run build:local:android
 2. Download `.ipa` file from Expo dashboard
 3. Upload via Transporter or Xcode
 4. Submit to App Store Connect
+
+### Web Deployment (Netlify)
+1. Build: `npm run build:web`
+2. Deploy via Netlify CLI: `netlify deploy --prod`
+3. Or push to GitHub and connect Netlify for auto-deployment
+4. Get live URL: `https://your-site.netlify.app`
+
+**See `NETLIFY_DEPLOYMENT.md` for complete web deployment guide**
 
 ---
 
