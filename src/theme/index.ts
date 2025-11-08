@@ -49,3 +49,6 @@ export {
 // React Native Paper themes
 export { lightTheme, darkTheme } from './paper-theme';
 
+// Common styles
+export { calculatorStyles } from './commonStyles';
+

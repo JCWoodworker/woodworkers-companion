@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { TextInput, Button, Card, Text, useTheme, Chip } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { TextInput, Button, Card, Text, Chip } from 'react-native-paper';
 import { fractionToDecimal, decimalToFraction } from '@/src/utils/calculations';
 import { usePreferencesStore } from '@/src/store';
+import { CalculatorLayout } from '@/src/components/common/CalculatorLayout';
+import { calculatorStyles, spacing } from '@/src/theme';
 
 /**
  * Fraction Calculator Screen
  * Precision math for woodworking measurements with fractions
  */
 export default function FractionCalculatorScreen() {
-  const theme = useTheme();
   const { fractionPrecision } = usePreferencesStore();
   
   // Input states for two fractions to add/subtract
@@ -76,13 +77,14 @@ export default function FractionCalculatorScreen() {
   const quickDenominators = [8, 16, 32, 64];
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={styles.contentContainer}
+    <CalculatorLayout
+      onCalculate={handleCalculate}
+      onReset={handleReset}
+      calculateLabel="Calculate"
     >
-      <Card style={styles.card} mode="elevated">
+      <Card style={calculatorStyles.card} mode="elevated">
         <Card.Content>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
+          <Text variant="titleMedium" style={calculatorStyles.sectionTitle}>
             First Measurement
           </Text>
 
@@ -148,9 +150,9 @@ export default function FractionCalculatorScreen() {
         </Button>
       </View>
 
-      <Card style={styles.card} mode="elevated">
+      <Card style={calculatorStyles.card} mode="elevated">
         <Card.Content>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
+          <Text variant="titleMedium" style={calculatorStyles.sectionTitle}>
             Second Measurement
           </Text>
 
@@ -198,127 +200,71 @@ export default function FractionCalculatorScreen() {
       </Card>
 
       {result && (
-        <Card style={[styles.card, styles.resultCard]} mode="elevated">
+        <Card style={[calculatorStyles.card, calculatorStyles.resultCard]} mode="elevated">
           <Card.Content>
-            <Text variant="titleLarge" style={styles.resultTitle}>
+            <Text variant="titleLarge" style={calculatorStyles.resultTitle}>
               Result
             </Text>
             
-            <View style={styles.resultRow}>
+            <View style={calculatorStyles.resultRow}>
               <Text variant="bodyLarge">Fraction:</Text>
-              <Text variant="titleLarge" style={styles.resultValue}>
+              <Text variant="titleLarge" style={calculatorStyles.resultValue}>
                 {result.fraction}
               </Text>
             </View>
 
-            <View style={styles.resultRow}>
+            <View style={calculatorStyles.resultRow}>
               <Text variant="bodyLarge">Decimal:</Text>
-              <Text variant="bodyLarge" style={styles.resultValue}>
+              <Text variant="bodyLarge" style={calculatorStyles.resultValue}>
                 {result.decimal.toFixed(4)}"
               </Text>
             </View>
 
-            <View style={styles.resultRow}>
+            <View style={calculatorStyles.resultRow}>
               <Text variant="bodyLarge">Feet & Inches:</Text>
-              <Text variant="bodyLarge" style={styles.resultValue}>
+              <Text variant="bodyLarge" style={calculatorStyles.resultValue}>
                 {result.feet}' {result.inches.toFixed(2)}"
               </Text>
             </View>
 
-            <View style={styles.resultRow}>
+            <View style={calculatorStyles.resultRow}>
               <Text variant="bodyLarge">Metric:</Text>
-              <Text variant="bodyLarge" style={styles.resultValue}>
+              <Text variant="bodyLarge" style={calculatorStyles.resultValue}>
                 {result.metric.toFixed(2)} mm
               </Text>
             </View>
           </Card.Content>
         </Card>
       )}
-
-      <View style={styles.buttonContainer}>
-        <Button
-          mode="contained"
-          onPress={handleCalculate}
-          style={styles.button}
-          icon="calculator"
-        >
-          Calculate
-        </Button>
-
-        <Button
-          mode="outlined"
-          onPress={handleReset}
-          style={styles.button}
-          icon="refresh"
-        >
-          Reset
-        </Button>
-      </View>
-    </ScrollView>
+    </CalculatorLayout>
   );
 }
 
+// Keep only calculator-specific styles
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    padding: 16,
-    paddingBottom: 32,
-  },
-  card: {
-    marginBottom: 16,
-  },
-  resultCard: {
-    backgroundColor: '#F5F5F0',
-  },
-  sectionTitle: {
-    marginBottom: 16,
-    fontWeight: '600',
-  },
   fractionRow: {
     flexDirection: 'row',
-    gap: 8,
-    marginBottom: 12,
+    gap: spacing.sm,
+    marginBottom: spacing.md,
   },
   fractionInput: {
     flex: 1,
   },
   chipContainer: {
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
     flexWrap: 'wrap',
   },
   chip: {
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   operationContainer: {
     flexDirection: 'row',
-    gap: 12,
-    marginBottom: 16,
+    gap: spacing.md,
+    marginBottom: spacing.base,
   },
   operationButton: {
     flex: 1,
-  },
-  resultTitle: {
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  resultRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  resultValue: {
-    fontWeight: '600',
-    color: '#8B4513',
-  },
-  buttonContainer: {
-    gap: 12,
-  },
-  button: {
-    marginBottom: 8,
   },
 });
 

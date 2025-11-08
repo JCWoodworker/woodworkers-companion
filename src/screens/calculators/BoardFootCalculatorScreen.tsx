@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { TextInput, Button, Card, Text, useTheme, SegmentedButtons } from 'react-native-paper';
+import { View } from 'react-native';
+import { TextInput, Card, Text, SegmentedButtons } from 'react-native-paper';
 import { calculateBoardFeet, applyWasteFactor, formatCurrency } from '@/src/utils/calculations';
 import { NOMINAL_THICKNESSES, WASTE_FACTORS } from '@/src/constants';
-import { spacing, touchTargets } from '@/src/theme';
-import { haptics } from '@/src/theme/animations';
-import { accessibleButton, accessibleTextInput } from '@/src/theme/accessibility';
+import { CalculatorLayout } from '@/src/components/common/CalculatorLayout';
+import { calculatorStyles } from '@/src/theme';
 
 /**
  * Board Foot Calculator Screen
  * Calculates lumber volume in board feet with cost and waste factor
  */
 export default function BoardFootCalculatorScreen() {
-  const theme = useTheme();
   
   // Input states
   const [thickness, setThickness] = useState('1');
@@ -31,9 +29,7 @@ export default function BoardFootCalculatorScreen() {
     costWithWaste: number;
   } | null>(null);
 
-  const handleCalculate = async () => {
-    await haptics.medium();
-    
+  const handleCalculate = () => {
     const t = parseFloat(thickness) || 0;
     const w = parseFloat(width) || 0;
     const l = parseFloat(length) || 0;
@@ -51,12 +47,10 @@ export default function BoardFootCalculatorScreen() {
         totalCost: bf * price,
         costWithWaste: bfWithWaste * price,
       });
-      await haptics.success();
     }
   };
 
-  const handleReset = async () => {
-    await haptics.light();
+  const handleReset = () => {
     setThickness('1');
     setWidth('');
     setLength('');
@@ -66,13 +60,14 @@ export default function BoardFootCalculatorScreen() {
   };
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={styles.contentContainer}
+    <CalculatorLayout
+      onCalculate={handleCalculate}
+      onReset={handleReset}
+      calculateLabel="Calculate"
     >
-      <Card style={styles.card} mode="elevated">
+      <Card style={calculatorStyles.card} mode="elevated">
         <Card.Content>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
+          <Text variant="titleMedium" style={calculatorStyles.sectionTitle}>
             Board Dimensions
           </Text>
 
@@ -82,7 +77,7 @@ export default function BoardFootCalculatorScreen() {
             onChangeText={setThickness}
             keyboardType="decimal-pad"
             mode="outlined"
-            style={styles.input}
+            style={calculatorStyles.input}
           />
 
           <TextInput
@@ -91,7 +86,7 @@ export default function BoardFootCalculatorScreen() {
             onChangeText={setWidth}
             keyboardType="decimal-pad"
             mode="outlined"
-            style={styles.input}
+            style={calculatorStyles.input}
           />
 
           <TextInput
@@ -100,10 +95,10 @@ export default function BoardFootCalculatorScreen() {
             onChangeText={setLength}
             keyboardType="decimal-pad"
             mode="outlined"
-            style={styles.input}
+            style={calculatorStyles.input}
           />
 
-          <Text variant="labelMedium" style={styles.label}>
+          <Text variant="labelMedium" style={calculatorStyles.label}>
             Length Unit
           </Text>
           <SegmentedButtons
@@ -113,7 +108,7 @@ export default function BoardFootCalculatorScreen() {
               { value: 'feet', label: 'Feet' },
               { value: 'inches', label: 'Inches' },
             ]}
-            style={styles.segmentedButtons}
+            style={calculatorStyles.segmentedButtons}
           />
 
           <TextInput
@@ -122,14 +117,14 @@ export default function BoardFootCalculatorScreen() {
             onChangeText={setQuantity}
             keyboardType="decimal-pad"
             mode="outlined"
-            style={styles.input}
+            style={calculatorStyles.input}
           />
         </Card.Content>
       </Card>
 
-      <Card style={styles.card} mode="elevated">
+      <Card style={calculatorStyles.card} mode="elevated">
         <Card.Content>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
+          <Text variant="titleMedium" style={calculatorStyles.sectionTitle}>
             Pricing & Waste Factor
           </Text>
 
@@ -139,7 +134,7 @@ export default function BoardFootCalculatorScreen() {
             onChangeText={setPricePerBF}
             keyboardType="decimal-pad"
             mode="outlined"
-            style={styles.input}
+            style={calculatorStyles.input}
             left={<TextInput.Icon icon="currency-usd" />}
           />
 
@@ -149,50 +144,50 @@ export default function BoardFootCalculatorScreen() {
             onChangeText={setWasteFactor}
             keyboardType="decimal-pad"
             mode="outlined"
-            style={styles.input}
+            style={calculatorStyles.input}
             right={<TextInput.Icon icon="percent" />}
           />
 
-          <Text variant="bodySmall" style={styles.helperText}>
+          <Text variant="bodySmall" style={calculatorStyles.helperText}>
             Typical: 15% for high-grade, 20% standard, 30% for low-grade lumber
           </Text>
         </Card.Content>
       </Card>
 
       {result && (
-        <Card style={[styles.card, styles.resultCard]} mode="elevated">
+        <Card style={[calculatorStyles.card, calculatorStyles.resultCard]} mode="elevated">
           <Card.Content>
-            <Text variant="titleLarge" style={styles.resultTitle}>
+            <Text variant="titleLarge" style={calculatorStyles.resultTitle}>
               Results
             </Text>
             
-            <View style={styles.resultRow}>
+            <View style={calculatorStyles.resultRow}>
               <Text variant="bodyLarge">Net Board Feet:</Text>
-              <Text variant="bodyLarge" style={styles.resultValue}>
+              <Text variant="bodyLarge" style={calculatorStyles.resultValue}>
                 {result.boardFeet.toFixed(2)} BF
               </Text>
             </View>
 
-            <View style={styles.resultRow}>
+            <View style={calculatorStyles.resultRow}>
               <Text variant="bodyLarge">With Waste ({wasteFactor}%):</Text>
-              <Text variant="bodyLarge" style={styles.resultValue}>
+              <Text variant="bodyLarge" style={calculatorStyles.resultValue}>
                 {result.withWaste.toFixed(2)} BF
               </Text>
             </View>
 
             {pricePerBF && (
               <>
-                <View style={styles.divider} />
-                <View style={styles.resultRow}>
+                <View style={calculatorStyles.divider} />
+                <View style={calculatorStyles.resultRow}>
                   <Text variant="bodyLarge">Net Cost:</Text>
-                  <Text variant="bodyLarge" style={styles.resultValue}>
+                  <Text variant="bodyLarge" style={calculatorStyles.resultValue}>
                     {formatCurrency(result.totalCost)}
                   </Text>
                 </View>
 
-                <View style={styles.resultRow}>
-                  <Text variant="titleMedium" style={styles.totalLabel}>Total Cost:</Text>
-                  <Text variant="titleLarge" style={[styles.resultValue, styles.totalValue]}>
+                <View style={calculatorStyles.resultRow}>
+                  <Text variant="titleMedium" style={calculatorStyles.totalLabel}>Total Cost:</Text>
+                  <Text variant="titleLarge" style={[calculatorStyles.resultValue, calculatorStyles.totalValue]}>
                     {formatCurrency(result.costWithWaste)}
                   </Text>
                 </View>
@@ -201,96 +196,7 @@ export default function BoardFootCalculatorScreen() {
           </Card.Content>
         </Card>
       )}
-
-      <View style={styles.buttonContainer}>
-        <Button
-          mode="contained"
-          onPress={handleCalculate}
-          style={styles.button}
-          icon="calculator"
-        >
-          Calculate
-        </Button>
-
-        <Button
-          mode="outlined"
-          onPress={handleReset}
-          style={styles.button}
-          icon="refresh"
-        >
-          Reset
-        </Button>
-      </View>
-    </ScrollView>
+    </CalculatorLayout>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    padding: spacing.base,
-    paddingBottom: spacing.xl,
-  },
-  card: {
-    marginBottom: spacing.base,
-  },
-  resultCard: {
-    backgroundColor: '#F5F5F0',
-  },
-  sectionTitle: {
-    marginBottom: spacing.base,
-    fontWeight: '600',
-  },
-  input: {
-    marginBottom: spacing.md,
-    minHeight: touchTargets.minimum,
-  },
-  label: {
-    marginBottom: spacing.sm,
-    marginTop: spacing.xs,
-  },
-  segmentedButtons: {
-    marginBottom: spacing.md,
-    minHeight: touchTargets.minimum,
-  },
-  helperText: {
-    opacity: 0.6,
-    fontStyle: 'italic',
-    marginTop: spacing.xs,
-  },
-  resultTitle: {
-    fontWeight: 'bold',
-    marginBottom: spacing.base,
-  },
-  resultRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing.sm,
-    minHeight: touchTargets.minimum,
-  },
-  resultValue: {
-    fontWeight: '600',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#E0E0E0',
-    marginVertical: spacing.md,
-  },
-  totalLabel: {
-    fontWeight: 'bold',
-  },
-  totalValue: {
-    color: '#8B4513',
-  },
-  buttonContainer: {
-    gap: spacing.md,
-  },
-  button: {
-    marginBottom: spacing.sm,
-    minHeight: touchTargets.minimum,
-  },
-});
 

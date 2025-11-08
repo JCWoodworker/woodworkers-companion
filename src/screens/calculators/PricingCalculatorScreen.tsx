@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { TextInput, Button, Card, Text, useTheme, SegmentedButtons, Divider } from 'react-native-paper';
+import { View } from 'react-native';
+import { TextInput, Card, Text, SegmentedButtons, Divider } from 'react-native-paper';
 import { formatCurrency } from '@/src/utils/calculations';
+import { CalculatorLayout } from '@/src/components/common/CalculatorLayout';
+import { calculatorStyles } from '@/src/theme';
 
 /**
  * Project Pricing Calculator Screen
  * Helps woodworkers calculate project costs and pricing
  */
 export default function PricingCalculatorScreen() {
-  const theme = useTheme();
   
   // Input states
   const [materialCost, setMaterialCost] = useState('');
@@ -82,13 +83,14 @@ export default function PricingCalculatorScreen() {
   };
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={styles.contentContainer}
+    <CalculatorLayout
+      onCalculate={handleCalculate}
+      onReset={handleReset}
+      calculateLabel="Calculate Price"
     >
-      <Card style={styles.card} mode="elevated">
+      <Card style={calculatorStyles.card} mode="elevated">
         <Card.Content>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
+          <Text variant="titleMedium" style={calculatorStyles.sectionTitle}>
             Pricing Model
           </Text>
           
@@ -100,10 +102,10 @@ export default function PricingCalculatorScreen() {
               { value: 'overhead', label: 'Overhead' },
               { value: 'markup', label: 'Markup' },
             ]}
-            style={styles.segmentedButtons}
+            style={calculatorStyles.segmentedButtons}
           />
 
-          <Text variant="bodySmall" style={styles.helperText}>
+          <Text variant="bodySmall" style={calculatorStyles.helperText}>
             {pricingModel === 'simple' && 'Materials + Labor = Price'}
             {pricingModel === 'overhead' && 'Materials + Labor + Overhead% = Price'}
             {pricingModel === 'markup' && '(Materials + Labor + Overhead) × Markup% = Price'}
@@ -111,9 +113,9 @@ export default function PricingCalculatorScreen() {
         </Card.Content>
       </Card>
 
-      <Card style={styles.card} mode="elevated">
+      <Card style={calculatorStyles.card} mode="elevated">
         <Card.Content>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
+          <Text variant="titleMedium" style={calculatorStyles.sectionTitle}>
             Direct Costs
           </Text>
 
@@ -123,7 +125,7 @@ export default function PricingCalculatorScreen() {
             onChangeText={setMaterialCost}
             keyboardType="decimal-pad"
             mode="outlined"
-            style={styles.input}
+            style={calculatorStyles.input}
             left={<TextInput.Icon icon="currency-usd" />}
           />
 
@@ -133,7 +135,7 @@ export default function PricingCalculatorScreen() {
             onChangeText={setHourlyRate}
             keyboardType="decimal-pad"
             mode="outlined"
-            style={styles.input}
+            style={calculatorStyles.input}
             left={<TextInput.Icon icon="currency-usd" />}
           />
 
@@ -143,20 +145,20 @@ export default function PricingCalculatorScreen() {
             onChangeText={setHoursSpent}
             keyboardType="decimal-pad"
             mode="outlined"
-            style={styles.input}
+            style={calculatorStyles.input}
             left={<TextInput.Icon icon="clock-outline" />}
           />
 
-          <Text variant="bodySmall" style={styles.helperText}>
+          <Text variant="bodySmall" style={calculatorStyles.helperText}>
             Typical hourly rates: $25-$85 depending on skill and market
           </Text>
         </Card.Content>
       </Card>
 
       {(pricingModel === 'overhead' || pricingModel === 'markup') && (
-        <Card style={styles.card} mode="elevated">
+        <Card style={calculatorStyles.card} mode="elevated">
           <Card.Content>
-            <Text variant="titleMedium" style={styles.sectionTitle}>
+            <Text variant="titleMedium" style={calculatorStyles.sectionTitle}>
               Overhead & Consumables
             </Text>
 
@@ -166,11 +168,11 @@ export default function PricingCalculatorScreen() {
               onChangeText={setOverheadPercent}
               keyboardType="decimal-pad"
               mode="outlined"
-              style={styles.input}
+              style={calculatorStyles.input}
               right={<TextInput.Icon icon="percent" />}
             />
 
-            <Text variant="bodySmall" style={styles.helperText}>
+            <Text variant="bodySmall" style={calculatorStyles.helperText}>
               Covers sandpaper, glue, finish, electricity, tool maintenance (typical: 10-30%)
             </Text>
           </Card.Content>
@@ -178,9 +180,9 @@ export default function PricingCalculatorScreen() {
       )}
 
       {pricingModel === 'markup' && (
-        <Card style={styles.card} mode="elevated">
+        <Card style={calculatorStyles.card} mode="elevated">
           <Card.Content>
-            <Text variant="titleMedium" style={styles.sectionTitle}>
+            <Text variant="titleMedium" style={calculatorStyles.sectionTitle}>
               Profit Margin
             </Text>
 
@@ -190,11 +192,11 @@ export default function PricingCalculatorScreen() {
               onChangeText={setMarkupPercent}
               keyboardType="decimal-pad"
               mode="outlined"
-              style={styles.input}
+              style={calculatorStyles.input}
               right={<TextInput.Icon icon="percent" />}
             />
 
-            <Text variant="bodySmall" style={styles.helperText}>
+            <Text variant="bodySmall" style={calculatorStyles.helperText}>
               Wholesale: 50-100% | Retail: 100-200%
             </Text>
           </Card.Content>
@@ -202,30 +204,30 @@ export default function PricingCalculatorScreen() {
       )}
 
       {result && (
-        <Card style={[styles.card, styles.resultCard]} mode="elevated">
+        <Card style={[calculatorStyles.card, calculatorStyles.resultCard]} mode="elevated">
           <Card.Content>
-            <Text variant="titleLarge" style={styles.resultTitle}>
+            <Text variant="titleLarge" style={calculatorStyles.resultTitle}>
               Price Breakdown
             </Text>
             
-            <View style={styles.resultRow}>
+            <View style={calculatorStyles.resultRow}>
               <Text variant="bodyLarge">Materials:</Text>
-              <Text variant="bodyLarge" style={styles.resultValue}>
+              <Text variant="bodyLarge" style={calculatorStyles.resultValue}>
                 {formatCurrency(result.materialCost)}
               </Text>
             </View>
 
-            <View style={styles.resultRow}>
+            <View style={calculatorStyles.resultRow}>
               <Text variant="bodyLarge">Labor:</Text>
-              <Text variant="bodyLarge" style={styles.resultValue}>
+              <Text variant="bodyLarge" style={calculatorStyles.resultValue}>
                 {formatCurrency(result.laborCost)}
               </Text>
             </View>
 
             {result.overhead > 0 && (
-              <View style={styles.resultRow}>
+              <View style={calculatorStyles.resultRow}>
                 <Text variant="bodyLarge">Overhead:</Text>
-                <Text variant="bodyLarge" style={styles.resultValue}>
+                <Text variant="bodyLarge" style={calculatorStyles.resultValue}>
                   {formatCurrency(result.overhead)}
                 </Text>
               </View>
@@ -233,18 +235,18 @@ export default function PricingCalculatorScreen() {
 
             {pricingModel === 'markup' && (
               <>
-                <Divider style={styles.divider} />
-                <View style={styles.resultRow}>
+                <Divider style={calculatorStyles.divider} />
+                <View style={calculatorStyles.resultRow}>
                   <Text variant="bodyLarge">Subtotal:</Text>
-                  <Text variant="bodyLarge" style={styles.resultValue}>
+                  <Text variant="bodyLarge" style={calculatorStyles.resultValue}>
                     {formatCurrency(result.subtotal)}
                   </Text>
                 </View>
 
                 {result.markup > 0 && (
-                  <View style={styles.resultRow}>
+                  <View style={calculatorStyles.resultRow}>
                     <Text variant="bodyLarge">Markup:</Text>
-                    <Text variant="bodyLarge" style={styles.resultValue}>
+                    <Text variant="bodyLarge" style={calculatorStyles.resultValue}>
                       {formatCurrency(result.markup)}
                     </Text>
                   </View>
@@ -252,97 +254,18 @@ export default function PricingCalculatorScreen() {
               </>
             )}
 
-            <Divider style={styles.divider} />
+            <Divider style={calculatorStyles.divider} />
 
-            <View style={styles.resultRow}>
-              <Text variant="titleLarge" style={styles.totalLabel}>Final Price:</Text>
-              <Text variant="displaySmall" style={[styles.resultValue, styles.totalValue]}>
+            <View style={calculatorStyles.resultRow}>
+              <Text variant="titleLarge" style={calculatorStyles.totalLabel}>Final Price:</Text>
+              <Text variant="displaySmall" style={[calculatorStyles.resultValue, calculatorStyles.totalValue]}>
                 {formatCurrency(result.finalPrice)}
               </Text>
             </View>
           </Card.Content>
         </Card>
       )}
-
-      <View style={styles.buttonContainer}>
-        <Button
-          mode="contained"
-          onPress={handleCalculate}
-          style={styles.button}
-          icon="calculator"
-        >
-          Calculate Price
-        </Button>
-
-        <Button
-          mode="outlined"
-          onPress={handleReset}
-          style={styles.button}
-          icon="refresh"
-        >
-          Reset
-        </Button>
-      </View>
-    </ScrollView>
+    </CalculatorLayout>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    padding: 16,
-    paddingBottom: 32,
-  },
-  card: {
-    marginBottom: 16,
-  },
-  resultCard: {
-    backgroundColor: '#F5F5F0',
-  },
-  sectionTitle: {
-    marginBottom: 16,
-    fontWeight: '600',
-  },
-  input: {
-    marginBottom: 12,
-  },
-  segmentedButtons: {
-    marginBottom: 12,
-  },
-  helperText: {
-    opacity: 0.6,
-    fontStyle: 'italic',
-    marginTop: 4,
-  },
-  resultTitle: {
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  resultRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  resultValue: {
-    fontWeight: '600',
-  },
-  divider: {
-    marginVertical: 12,
-  },
-  totalLabel: {
-    fontWeight: 'bold',
-  },
-  totalValue: {
-    color: '#8B4513',
-  },
-  buttonContainer: {
-    gap: 12,
-  },
-  button: {
-    marginBottom: 8,
-  },
-});
 
