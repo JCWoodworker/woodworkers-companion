@@ -135,7 +135,7 @@ export default function HomeScreen() {
         />
       </View>
 
-      {/* Phase 2: Advanced Tools (Coming Soon) */}
+      {/* Phase 2: Advanced Tools */}
       <View style={styles.section}>
         <Text variant="titleLarge" style={[styles.sectionTitle, { color: theme.colors.onBackground }]}>
           Advanced Tools
@@ -146,7 +146,6 @@ export default function HomeScreen() {
           description="Minimize waste with optimized cutting diagrams"
           icon="content-cut"
           route="/calculators/cut-list"
-          disabled
         />
 
         <CalculatorCard
@@ -154,7 +153,6 @@ export default function HomeScreen() {
           description="Predict seasonal expansion and contraction"
           icon="swap-horizontal"
           route="/calculators/wood-movement"
-          disabled
         />
 
         <CalculatorCard
@@ -162,7 +160,6 @@ export default function HomeScreen() {
           description="Perfect ratios for shellac and custom finishes"
           icon="palette"
           route="/calculators/finish-mixing"
-          disabled
         />
       </View>
 

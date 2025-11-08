@@ -29,6 +29,33 @@ export const WASTE_FACTORS = [
   { label: 'Custom', value: 0 },
 ];
 
+// Shellac cuts (Phase 2)
+export const SHELLAC_CUTS = [
+  { label: '1-lb Cut (Washcoat)', value: 1, description: 'Thin sealer, barrier coat' },
+  { label: '2-lb Cut (Sealer)', value: 2, description: 'Most versatile, general finishing' },
+  { label: '3-lb Cut (Finish)', value: 3, description: 'Builds film quickly' },
+  { label: '4-lb Cut', value: 4, description: 'Padding/French polish' },
+  { label: '5-lb Cut', value: 5, description: 'Very heavy bodied' },
+];
+
+// Sheet sizes for cut list optimizer (Phase 2)
+export const SHEET_SIZES = [
+  { label: "4' × 8' (Standard Plywood)", width: 48, height: 96 },
+  { label: "4' × 10'", width: 48, height: 120 },
+  { label: "5' × 5' (Baltic Birch)", width: 60, height: 60 },
+  { label: "4' × 4'", width: 48, height: 48 },
+  { label: 'Custom', width: 0, height: 0 },
+];
+
+// Moisture environment presets (Phase 2)
+export const MOISTURE_ENVIRONMENTS = [
+  { label: 'Climate Controlled (±2%)', value: 2, description: 'HVAC controlled home' },
+  { label: 'Standard Home (±4%)', value: 4, description: 'Typical residential' },
+  { label: 'Garage/Basement (±6%)', value: 6, description: 'Unheated space' },
+  { label: 'Outdoor/Extreme (±8%)', value: 8, description: 'High humidity variation' },
+  { label: 'Custom', value: 0, description: 'Enter custom value' },
+];
+
 // App metadata
 export const APP_NAME = "The Woodworker's Companion";
 export const APP_TAGLINE = 'Essential Tools for Every Craftsperson';

@@ -8,6 +8,7 @@ import React from 'react';
 export default function CalculatorLayout() {
   return (
     <Stack>
+      {/* Phase 1 Calculators */}
       <Stack.Screen
         name="board-foot"
         options={{
@@ -26,6 +27,29 @@ export default function CalculatorLayout() {
         name="pricing"
         options={{
           title: 'Project Pricing',
+          headerShown: true,
+        }}
+      />
+
+      {/* Phase 2 Calculators */}
+      <Stack.Screen
+        name="cut-list"
+        options={{
+          title: 'Cut List Optimizer',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="wood-movement"
+        options={{
+          title: 'Wood Movement Calculator',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="finish-mixing"
+        options={{
+          title: 'Finish Mixing Calculator',
           headerShown: true,
         }}
       />
