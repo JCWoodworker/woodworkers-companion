@@ -1,5 +1,6 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
+import { Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
@@ -57,6 +58,14 @@ export default function RootLayout() {
             <Stack.Screen name="inventory" options={{ headerShown: false }} />
             <Stack.Screen name="clients" options={{ headerShown: false }} />
             <Stack.Screen name="documents" options={{ headerShown: false }} />
+            <Stack.Screen name="settings" options={{ headerShown: false }} />
+            <Stack.Screen 
+              name="privacy-policy" 
+              options={{ 
+                title: 'Privacy Policy',
+                headerShown: true,
+              }} 
+            />
           </Stack>
           <StatusBar style="auto" />
         </ThemeProvider>

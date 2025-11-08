@@ -70,6 +70,14 @@ export default function SettingsScreen() {
             description="1.0.0"
             left={(props) => <List.Icon {...props} icon="information" />}
           />
+          
+          <List.Item
+            title="Privacy Policy"
+            description="How we handle your data"
+            left={(props) => <List.Icon {...props} icon="shield-account" />}
+            right={(props) => <List.Icon {...props} icon="chevron-right" />}
+            onPress={() => router.push('/privacy-policy' as any)}
+          />
         </List.Section>
       </ScrollView>
     </View>
