@@ -53,6 +53,10 @@ export default function RootLayout() {
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="home" options={{ headerShown: false }} />
             <Stack.Screen name="calculators" options={{ headerShown: false }} />
+            <Stack.Screen name="projects" options={{ headerShown: false }} />
+            <Stack.Screen name="inventory" options={{ headerShown: false }} />
+            <Stack.Screen name="clients" options={{ headerShown: false }} />
+            <Stack.Screen name="documents" options={{ headerShown: false }} />
           </Stack>
           <StatusBar style="auto" />
         </ThemeProvider>

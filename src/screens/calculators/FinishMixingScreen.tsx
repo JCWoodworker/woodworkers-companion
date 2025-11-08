@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Card, Text, SegmentedButtons, TextInput, List } from 'react-native-paper';
 import { CalculatorLayout } from '@/src/components/common/CalculatorLayout';
+import { SelectableList } from '@/src/components/common/SelectableList';
 import { calculatorStyles, spacing } from '@/src/theme';
 import { 
   calculateShellacImperial, 
   calculateShellacMetric,
   poundCutToGramsPerLiter,
   getMixingInstructions,
-  getShelfLife 
-} from '@/src/utils/finishMixing';
+  getShelfLife,
+  safeParseFloat 
+} from '@/src/utils';
 import { SHELLAC_CUTS } from '@/src/constants';
 
 /**
@@ -31,7 +33,7 @@ export default function FinishMixingScreen() {
 
   const handleCalculate = () => {
     if (unitSystem === 'imperial') {
-      const vol = parseFloat(volumeImperial) || 0;
+      const vol = safeParseFloat(volumeImperial);
       if (vol > 0) {
         const weight = calculateShellacImperial(poundCut, vol);
         setResult({
@@ -42,7 +44,7 @@ export default function FinishMixingScreen() {
         });
       }
     } else {
-      const vol = parseFloat(volumeMetric) || 0;
+      const vol = safeParseFloat(volumeMetric);
       if (vol > 0) {
         const gramsPerLiter = poundCutToGramsPerLiter(poundCut);
         const weight = calculateShellacMetric(gramsPerLiter, vol);

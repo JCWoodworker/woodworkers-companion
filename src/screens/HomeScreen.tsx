@@ -163,7 +163,7 @@ export default function HomeScreen() {
         />
       </View>
 
-      {/* Phase 3: Business Tools (Coming Soon) */}
+      {/* Phase 3: Business Tools */}
       <View style={styles.section}>
         <Text variant="titleLarge" style={[styles.sectionTitle, { color: theme.colors.onBackground }]}>
           Business Tools
@@ -174,7 +174,6 @@ export default function HomeScreen() {
           description="Track tasks, time, and expenses for your builds"
           icon="clipboard-text"
           route="/projects"
-          disabled
         />
 
         <CalculatorCard
@@ -182,15 +181,13 @@ export default function HomeScreen() {
           description="Manage lumber, tools, and materials"
           icon="warehouse"
           route="/inventory"
-          disabled
         />
 
         <CalculatorCard
-          title="Quotes & Invoices"
-          description="Professional documents for your clients"
-          icon="file-document"
-          route="/documents"
-          disabled
+          title="Clients & Quotes"
+          description="CRM and professional documents"
+          icon="account-group"
+          route="/clients"
         />
       </View>
     </ScrollView>

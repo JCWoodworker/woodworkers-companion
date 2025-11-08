@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Card, Text, TextInput, SegmentedButtons, List, Searchbar } from 'react-native-paper';
 import { CalculatorLayout } from '@/src/components/common/CalculatorLayout';
 import { calculatorStyles, spacing } from '@/src/theme';
-import { calculateWoodMovement, getCoefficient, getMovementGuidance } from '@/src/utils/woodMovement';
+import { calculateWoodMovement, getCoefficient, getMovementGuidance, safeParseFloat } from '@/src/utils';
 import { WOOD_SPECIES_DATABASE, searchWoodSpecies } from '@/src/data/woodSpecies';
 import { WoodSpecies, CutType } from '@/src/types/woodSpecies';
 import { MOISTURE_ENVIRONMENTS } from '@/src/constants';
@@ -27,8 +27,8 @@ export default function WoodMovementScreen() {
   } | null>(null);
 
   const handleCalculate = () => {
-    const width = parseFloat(boardWidth) || 0;
-    const mc = parseFloat(moistureChange) || 0;
+    const width = safeParseFloat(boardWidth);
+    const mc = safeParseFloat(moistureChange);
 
     if (width > 0 && mc > 0 && selectedSpecies) {
       const coefficient = getCoefficient(selectedSpecies, cutType);

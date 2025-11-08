@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TextInput, Button, Card, Text, Chip } from 'react-native-paper';
-import { fractionToDecimal, decimalToFraction } from '@/src/utils/calculations';
+import { fractionToDecimal, decimalToFraction, safeParseFloat } from '@/src/utils';
 import { usePreferencesStore } from '@/src/store';
 import { CalculatorLayout } from '@/src/components/common/CalculatorLayout';
 import { calculatorStyles, spacing } from '@/src/theme';
@@ -32,13 +32,13 @@ export default function FractionCalculatorScreen() {
   } | null>(null);
 
   const handleCalculate = () => {
-    const w1 = parseFloat(whole1) || 0;
-    const n1 = parseFloat(numerator1) || 0;
-    const d1 = parseFloat(denominator1) || 1;
+    const w1 = safeParseFloat(whole1);
+    const n1 = safeParseFloat(numerator1);
+    const d1 = safeParseFloat(denominator1, 1);
     
-    const w2 = parseFloat(whole2) || 0;
-    const n2 = parseFloat(numerator2) || 0;
-    const d2 = parseFloat(denominator2) || 1;
+    const w2 = safeParseFloat(whole2);
+    const n2 = safeParseFloat(numerator2);
+    const d2 = safeParseFloat(denominator2, 1);
 
     const value1 = fractionToDecimal(w1, n1, d1);
     const value2 = fractionToDecimal(w2, n2, d2);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { TextInput, Card, Text, SegmentedButtons, Divider } from 'react-native-paper';
-import { formatCurrency } from '@/src/utils/calculations';
+import { formatCurrency, safeParseFloat } from '@/src/utils';
 import { CalculatorLayout } from '@/src/components/common/CalculatorLayout';
 import { calculatorStyles } from '@/src/theme';
 
@@ -30,11 +30,11 @@ export default function PricingCalculatorScreen() {
   } | null>(null);
 
   const handleCalculate = () => {
-    const materials = parseFloat(materialCost) || 0;
-    const rate = parseFloat(hourlyRate) || 0;
-    const hours = parseFloat(hoursSpent) || 0;
-    const overheadPct = parseFloat(overheadPercent) || 0;
-    const markupPct = parseFloat(markupPercent) || 0;
+    const materials = safeParseFloat(materialCost);
+    const rate = safeParseFloat(hourlyRate);
+    const hours = safeParseFloat(hoursSpent);
+    const overheadPct = safeParseFloat(overheadPercent);
+    const markupPct = safeParseFloat(markupPercent);
 
     const labor = rate * hours;
     let overhead = 0;

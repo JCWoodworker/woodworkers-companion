@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { TextInput, Card, Text, SegmentedButtons } from 'react-native-paper';
-import { calculateBoardFeet, applyWasteFactor, formatCurrency } from '@/src/utils/calculations';
+import { calculateBoardFeet, applyWasteFactor, formatCurrency, safeParseFloat } from '@/src/utils';
 import { NOMINAL_THICKNESSES, WASTE_FACTORS } from '@/src/constants';
 import { CalculatorLayout } from '@/src/components/common/CalculatorLayout';
 import { calculatorStyles } from '@/src/theme';
@@ -30,12 +30,12 @@ export default function BoardFootCalculatorScreen() {
   } | null>(null);
 
   const handleCalculate = () => {
-    const t = parseFloat(thickness) || 0;
-    const w = parseFloat(width) || 0;
-    const l = parseFloat(length) || 0;
-    const q = parseFloat(quantity) || 1;
-    const price = parseFloat(pricePerBF) || 0;
-    const waste = parseFloat(wasteFactor) || 0;
+    const t = safeParseFloat(thickness);
+    const w = safeParseFloat(width);
+    const l = safeParseFloat(length);
+    const q = safeParseFloat(quantity, 1);
+    const price = safeParseFloat(pricePerBF);
+    const waste = safeParseFloat(wasteFactor);
 
     if (t > 0 && w > 0 && l > 0) {
       const bf = calculateBoardFeet(t, w, l, lengthUnit) * q;

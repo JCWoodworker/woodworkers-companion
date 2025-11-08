@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Card, Text, TextInput, Button, List, IconButton, SegmentedButtons, Menu } from 'react-native-paper';
 import { CalculatorLayout } from '@/src/components/common/CalculatorLayout';
 import { calculatorStyles, spacing } from '@/src/theme';
-import { optimizeCutList, formatDimension, calculateWasteArea } from '@/src/utils/cutListOptimizer';
+import { optimizeCutList, formatDimension, calculateWasteArea, safeParseFloat, safeParseInt, generateId } from '@/src/utils';
 import { CuttingDiagram } from '@/src/components/calculators/CuttingDiagram';
 import { Part, StockPanel, CutLayout } from '@/src/types/cutList';
 import { SHEET_SIZES } from '@/src/constants';
@@ -35,13 +35,13 @@ export default function CutListOptimizerScreen() {
   const [layout, setLayout] = useState<CutLayout | null>(null);
 
   const handleAddPart = () => {
-    const width = parseFloat(partWidth);
-    const height = parseFloat(partHeight);
-    const quantity = parseInt(partQuantity, 10);
+    const width = safeParseFloat(partWidth);
+    const height = safeParseFloat(partHeight);
+    const quantity = safeParseInt(partQuantity, 1);
 
     if (partName && width > 0 && height > 0 && quantity > 0) {
       const newPart: Part = {
-        id: Math.random().toString(36).substr(2, 9),
+        id: generateId('part'),
         name: partName,
         width,
         height,
@@ -66,11 +66,11 @@ export default function CutListOptimizerScreen() {
 
   const handleCalculate = () => {
     const stock: StockPanel = {
-      width: parseFloat(stockWidth) || 48,
-      height: parseFloat(stockHeight) || 96,
+      width: safeParseFloat(stockWidth, 48),
+      height: safeParseFloat(stockHeight, 96),
     };
 
-    const kerfValue = parseFloat(kerf) || 0.125;
+    const kerfValue = safeParseFloat(kerf, 0.125);
 
     if (parts.length > 0) {
       const optimizedLayout = optimizeCutList(stock, parts, kerfValue);
