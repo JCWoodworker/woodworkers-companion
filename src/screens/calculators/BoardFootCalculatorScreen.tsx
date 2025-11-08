@@ -3,6 +3,9 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { TextInput, Button, Card, Text, useTheme, SegmentedButtons } from 'react-native-paper';
 import { calculateBoardFeet, applyWasteFactor, formatCurrency } from '@/src/utils/calculations';
 import { NOMINAL_THICKNESSES, WASTE_FACTORS } from '@/src/constants';
+import { spacing, touchTargets } from '@/src/theme';
+import { haptics } from '@/src/theme/animations';
+import { accessibleButton, accessibleTextInput } from '@/src/theme/accessibility';
 
 /**
  * Board Foot Calculator Screen
@@ -28,7 +31,9 @@ export default function BoardFootCalculatorScreen() {
     costWithWaste: number;
   } | null>(null);
 
-  const handleCalculate = () => {
+  const handleCalculate = async () => {
+    await haptics.medium();
+    
     const t = parseFloat(thickness) || 0;
     const w = parseFloat(width) || 0;
     const l = parseFloat(length) || 0;
@@ -46,10 +51,12 @@ export default function BoardFootCalculatorScreen() {
         totalCost: bf * price,
         costWithWaste: bfWithWaste * price,
       });
+      await haptics.success();
     }
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
+    await haptics.light();
     setThickness('1');
     setWidth('');
     setLength('');
@@ -223,43 +230,46 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    padding: 16,
-    paddingBottom: 32,
+    padding: spacing.base,
+    paddingBottom: spacing.xl,
   },
   card: {
-    marginBottom: 16,
+    marginBottom: spacing.base,
   },
   resultCard: {
     backgroundColor: '#F5F5F0',
   },
   sectionTitle: {
-    marginBottom: 16,
+    marginBottom: spacing.base,
     fontWeight: '600',
   },
   input: {
-    marginBottom: 12,
+    marginBottom: spacing.md,
+    minHeight: touchTargets.minimum,
   },
   label: {
-    marginBottom: 8,
-    marginTop: 4,
+    marginBottom: spacing.sm,
+    marginTop: spacing.xs,
   },
   segmentedButtons: {
-    marginBottom: 12,
+    marginBottom: spacing.md,
+    minHeight: touchTargets.minimum,
   },
   helperText: {
     opacity: 0.6,
     fontStyle: 'italic',
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
   resultTitle: {
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: spacing.base,
   },
   resultRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
+    minHeight: touchTargets.minimum,
   },
   resultValue: {
     fontWeight: '600',
@@ -267,7 +277,7 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: '#E0E0E0',
-    marginVertical: 12,
+    marginVertical: spacing.md,
   },
   totalLabel: {
     fontWeight: 'bold',
@@ -276,10 +286,11 @@ const styles = StyleSheet.create({
     color: '#8B4513',
   },
   buttonContainer: {
-    gap: 12,
+    gap: spacing.md,
   },
   button: {
-    marginBottom: 8,
+    marginBottom: spacing.sm,
+    minHeight: touchTargets.minimum,
   },
 });
 

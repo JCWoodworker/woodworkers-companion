@@ -1,9 +1,112 @@
 import { MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
 import type { MD3Theme } from 'react-native-paper';
+import { Platform } from 'react-native';
 import { Colors } from './colors';
+import { fontFamilies } from './typography';
+
+// Configure custom fonts for React Native Paper
+const configureFonts = () => ({
+  displayLarge: {
+    fontFamily: fontFamilies.heading.bold,
+    fontSize: 57,
+    lineHeight: 64,
+    fontWeight: '700' as const,
+  },
+  displayMedium: {
+    fontFamily: fontFamilies.heading.bold,
+    fontSize: 45,
+    lineHeight: 52,
+    fontWeight: '700' as const,
+  },
+  displaySmall: {
+    fontFamily: fontFamilies.heading.bold,
+    fontSize: 36,
+    lineHeight: 44,
+    fontWeight: '700' as const,
+  },
+  headlineLarge: {
+    fontFamily: fontFamilies.heading.semiBold,
+    fontSize: 32,
+    lineHeight: 40,
+    fontWeight: '600' as const,
+  },
+  headlineMedium: {
+    fontFamily: fontFamilies.heading.semiBold,
+    fontSize: 28,
+    lineHeight: 36,
+    fontWeight: '600' as const,
+  },
+  headlineSmall: {
+    fontFamily: fontFamilies.heading.semiBold,
+    fontSize: 24,
+    lineHeight: 32,
+    fontWeight: '600' as const,
+  },
+  titleLarge: {
+    fontFamily: fontFamilies.heading.medium,
+    fontSize: 22,
+    lineHeight: 28,
+    fontWeight: '500' as const,
+  },
+  titleMedium: {
+    fontFamily: fontFamilies.heading.medium,
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '500' as const,
+  },
+  titleSmall: {
+    fontFamily: fontFamilies.heading.medium,
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '500' as const,
+  },
+  bodyLarge: {
+    fontFamily: Platform.select({ ios: 'System', android: 'Roboto', default: 'System' }),
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '400' as const,
+  },
+  bodyMedium: {
+    fontFamily: Platform.select({ ios: 'System', android: 'Roboto', default: 'System' }),
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '400' as const,
+  },
+  bodySmall: {
+    fontFamily: Platform.select({ ios: 'System', android: 'Roboto', default: 'System' }),
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: '400' as const,
+  },
+  labelLarge: {
+    fontFamily: fontFamilies.heading.medium,
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '500' as const,
+  },
+  labelMedium: {
+    fontFamily: fontFamilies.heading.medium,
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: '500' as const,
+  },
+  labelSmall: {
+    fontFamily: fontFamilies.heading.medium,
+    fontSize: 11,
+    lineHeight: 16,
+    fontWeight: '500' as const,
+  },
+  default: {
+    fontFamily: Platform.select({ ios: 'System', android: 'Roboto', default: 'System' }),
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '400' as const,
+  },
+});
 
 export const lightTheme: MD3Theme = {
   ...MD3LightTheme,
+  fonts: configureFonts(),
   colors: {
     ...MD3LightTheme.colors,
     primary: Colors.light.primary,
@@ -47,6 +150,7 @@ export const lightTheme: MD3Theme = {
 
 export const darkTheme: MD3Theme = {
   ...MD3DarkTheme,
+  fonts: configureFonts(),
   colors: {
     ...MD3DarkTheme.colors,
     primary: Colors.dark.primary,

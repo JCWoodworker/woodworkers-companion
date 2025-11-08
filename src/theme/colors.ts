@@ -68,7 +68,7 @@ export const Colors = {
     // Primary colors - warm wood tones
     primary: '#D2691E', // Lighter wood for dark mode
     primaryContainer: '#6B3410',
-    onPrimary: '#FFFFFF',
+    onPrimary: '#000000', // Black for WCAG AA compliance (5.16:1 contrast)
     onPrimaryContainer: '#FFE4D0',
 
     // Secondary colors - tool metal tones

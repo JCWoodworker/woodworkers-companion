@@ -1,8 +1,12 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, Pressable } from 'react-native';
 import { Card, Text, useTheme, Icon } from 'react-native-paper';
 import { router } from 'expo-router';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { APP_NAME, APP_TAGLINE } from '@/src/constants';
+import { spacing, touchTargets } from '@/src/theme';
+import { haptics } from '@/src/theme/animations';
+import { accessibleButton } from '@/src/theme/accessibility';
 
 interface CalculatorCardProps {
   title: string;
@@ -20,37 +24,68 @@ const CalculatorCard: React.FC<CalculatorCardProps> = ({
   disabled = false,
 }) => {
   const theme = useTheme();
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    if (!disabled) {
+      scale.value = withSpring(0.97, { damping: 15, stiffness: 400 });
+    }
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 400 });
+  };
+
+  const handlePress = async () => {
+    if (!disabled) {
+      await haptics.light();
+      router.push(route as any);
+    }
+  };
 
   return (
-    <Card
-      style={[
-        styles.card,
-        disabled && { opacity: 0.5 },
-        { backgroundColor: theme.colors.surface },
-      ]}
-      mode="elevated"
-      onPress={() => !disabled && router.push(route as any)}
-      disabled={disabled}
-    >
-      <Card.Content style={styles.cardContent}>
-        <View style={styles.iconContainer}>
-          <Icon source={icon} size={40} color={theme.colors.primary} />
-        </View>
-        <View style={styles.textContainer}>
-          <Text variant="titleMedium" style={styles.cardTitle}>
-            {title}
-          </Text>
-          <Text variant="bodyMedium" style={styles.cardDescription}>
-            {description}
-          </Text>
-          {disabled && (
-            <Text variant="bodySmall" style={styles.comingSoon}>
-              Coming Soon
-            </Text>
-          )}
-        </View>
-      </Card.Content>
-    </Card>
+    <Animated.View style={animatedStyle}>
+      <Pressable
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={handlePress}
+        disabled={disabled}
+        {...accessibleButton(title, disabled ? 'Coming soon' : description)}
+        style={{ minHeight: touchTargets.minimum }}
+      >
+        <Card
+          style={[
+            styles.card,
+            disabled && { opacity: 0.5 },
+            { backgroundColor: theme.colors.surface },
+          ]}
+          mode="elevated"
+        >
+          <Card.Content style={styles.cardContent}>
+            <View style={styles.iconContainer}>
+              <Icon source={icon} size={40} color={theme.colors.primary} />
+            </View>
+            <View style={styles.textContainer}>
+              <Text variant="titleMedium" style={styles.cardTitle}>
+                {title}
+              </Text>
+              <Text variant="bodyMedium" style={styles.cardDescription}>
+                {description}
+              </Text>
+              {disabled && (
+                <Text variant="bodySmall" style={styles.comingSoon}>
+                  Coming Soon
+                </Text>
+              )}
+            </View>
+          </Card.Content>
+        </Card>
+      </Pressable>
+    </Animated.View>
   );
 };
 
@@ -170,49 +205,50 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    padding: 16,
-    paddingBottom: 32,
+    padding: spacing.base,
+    paddingBottom: spacing.xl,
   },
   header: {
-    marginBottom: 24,
-    marginTop: 16,
+    marginBottom: spacing.lg,
+    marginTop: spacing.base,
   },
   title: {
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   tagline: {
     fontStyle: 'italic',
   },
   section: {
-    marginBottom: 24,
+    marginBottom: spacing.lg,
   },
   sectionTitle: {
-    marginBottom: 12,
+    marginBottom: spacing.md,
     fontWeight: '600',
   },
   card: {
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    minHeight: touchTargets.minimum,
   },
   iconContainer: {
-    marginRight: 16,
+    marginRight: spacing.base,
   },
   textContainer: {
     flex: 1,
   },
   cardTitle: {
     fontWeight: '600',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   cardDescription: {
     opacity: 0.7,
   },
   comingSoon: {
-    marginTop: 4,
+    marginTop: spacing.xs,
     fontStyle: 'italic',
     opacity: 0.6,
   },
