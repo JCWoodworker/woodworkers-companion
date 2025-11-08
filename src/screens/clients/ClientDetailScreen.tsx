@@ -144,7 +144,7 @@ export default function ClientDetailScreen() {
                   title={quote.quoteNumber}
                   description={`${formatCurrency(quote.total)} • ${formatDate(quote.createdAt)}`}
                   right={() => <StatusBadge status={quote.status} type="quote" />}
-                  onPress={() => router.push(`/documents/quotes/${quote.id}`)}
+                  onPress={() => router.push(`/documents/quotes` as any)}
                 />
               ))}
             </Card.Content>

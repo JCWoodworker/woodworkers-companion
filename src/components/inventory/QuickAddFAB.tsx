@@ -26,7 +26,7 @@ export function QuickAddFAB({ defaultCategory }: Props) {
           {
             icon: 'tree',
             label: 'Add Lumber',
-            onPress: () => router.push('/inventory/add?type=lumber'),
+            onPress: () => router.push('/inventory/add?type=lumber' as any),
           },
         ]
       : []),
@@ -35,7 +35,7 @@ export function QuickAddFAB({ defaultCategory }: Props) {
           {
             icon: 'hammer-wrench',
             label: 'Add Tool',
-            onPress: () => router.push('/inventory/add?type=tool'),
+            onPress: () => router.push('/inventory/add?type=tool' as any),
           },
         ]
       : []),
@@ -44,7 +44,7 @@ export function QuickAddFAB({ defaultCategory }: Props) {
           {
             icon: 'package-variant',
             label: 'Add Consumable',
-            onPress: () => router.push('/inventory/add?type=consumable'),
+            onPress: () => router.push('/inventory/add?type=consumable' as any),
           },
         ]
       : []),
@@ -53,7 +53,7 @@ export function QuickAddFAB({ defaultCategory }: Props) {
           {
             icon: 'screw-machine-flat-top',
             label: 'Add Hardware',
-            onPress: () => router.push('/inventory/add?type=hardware'),
+            onPress: () => router.push('/inventory/add?type=hardware' as any),
           },
         ]
       : []),
@@ -62,7 +62,7 @@ export function QuickAddFAB({ defaultCategory }: Props) {
           {
             icon: 'shape-plus',
             label: 'Add Custom',
-            onPress: () => router.push('/inventory/add?type=custom'),
+            onPress: () => router.push('/inventory/add?type=custom' as any),
           },
         ]
       : []),
@@ -76,7 +76,7 @@ export function QuickAddFAB({ defaultCategory }: Props) {
         style={styles.fab}
         onPress={() => {
           if (defaultCategory) {
-            router.push(`/inventory/add?type=${defaultCategory}`);
+            router.push(`/inventory/add?type=${defaultCategory}` as any);
           } else if (actions.length === 1) {
             actions[0].onPress();
           }

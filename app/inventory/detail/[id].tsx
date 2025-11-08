@@ -107,7 +107,7 @@ export default function InventoryItemDetailScreen() {
   const renderHardwareDetail = () => (
     <>
       <Text variant="displaySmall" style={styles.title}>{item.name}</Text>
-      <Divider style={styles.divider} />}
+      <Divider style={styles.divider} />
       {item.size && <DetailRow label="Size" value={item.size} />}
       {item.material && <DetailRow label="Material" value={item.material} />}
       <DetailRow label="Quantity" value={`${item.quantity} ${item.unit}`} />

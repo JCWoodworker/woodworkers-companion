@@ -54,7 +54,7 @@ export default function SettingsScreen() {
             description="Customize inventory features and fields"
             left={(props) => <List.Icon {...props} icon="package-variant-closed" />}
             right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            onPress={() => router.push('/settings/inventory')}
+            onPress={() => router.push('/settings/inventory' as any)}
           />
         </List.Section>
 

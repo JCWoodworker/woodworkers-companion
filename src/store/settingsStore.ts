@@ -47,94 +47,77 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
   },
 
   setComplexityMode: (mode) => {
+    const state = get();
     const newInventorySettings = mode === 'hobbyist' 
       ? DEFAULT_HOBBYIST_SETTINGS 
       : mode === 'professional'
       ? DEFAULT_PROFESSIONAL_SETTINGS
-      : get().inventory; // Keep current settings for custom mode
+      : state.inventory; // Keep current settings for custom mode
 
     const newSettings: AppSettings = {
-      ...get(),
       complexityMode: mode,
       inventory: newInventorySettings,
-      isLoading: false,
+      theme: state.theme,
+      hapticFeedback: state.hapticFeedback,
+      hasCompletedOnboarding: state.hasCompletedOnboarding,
     };
-    
-    delete (newSettings as any).isLoading;
-    delete (newSettings as any).loadSettings;
-    delete (newSettings as any).setComplexityMode;
-    delete (newSettings as any).updateInventorySettings;
-    delete (newSettings as any).setTheme;
-    delete (newSettings as any).setHapticFeedback;
-    delete (newSettings as any).completeOnboarding;
-    delete (newSettings as any).resetToDefaults;
     
     saveData(STORAGE_KEYS.APP_SETTINGS, newSettings);
     set({ complexityMode: mode, inventory: newInventorySettings });
   },
 
   updateInventorySettings: (updates) => {
-    const newInventory = { ...get().inventory, ...updates };
+    const state = get();
+    const newInventory = { ...state.inventory, ...updates };
     const newSettings: AppSettings = {
-      ...get(),
       complexityMode: 'custom', // Switching to custom mode when manually adjusting
       inventory: newInventory,
-      isLoading: false,
+      theme: state.theme,
+      hapticFeedback: state.hapticFeedback,
+      hasCompletedOnboarding: state.hasCompletedOnboarding,
     };
-    
-    delete (newSettings as any).isLoading;
-    delete (newSettings as any).loadSettings;
-    delete (newSettings as any).setComplexityMode;
-    delete (newSettings as any).updateInventorySettings;
-    delete (newSettings as any).setTheme;
-    delete (newSettings as any).setHapticFeedback;
-    delete (newSettings as any).completeOnboarding;
-    delete (newSettings as any).resetToDefaults;
     
     saveData(STORAGE_KEYS.APP_SETTINGS, newSettings);
     set({ complexityMode: 'custom', inventory: newInventory });
   },
 
   setTheme: (theme) => {
-    const newSettings: AppSettings = { ...get(), theme, isLoading: false };
-    delete (newSettings as any).isLoading;
-    delete (newSettings as any).loadSettings;
-    delete (newSettings as any).setComplexityMode;
-    delete (newSettings as any).updateInventorySettings;
-    delete (newSettings as any).setTheme;
-    delete (newSettings as any).setHapticFeedback;
-    delete (newSettings as any).completeOnboarding;
-    delete (newSettings as any).resetToDefaults;
+    const state = get();
+    const newSettings: AppSettings = {
+      complexityMode: state.complexityMode,
+      inventory: state.inventory,
+      theme,
+      hapticFeedback: state.hapticFeedback,
+      hasCompletedOnboarding: state.hasCompletedOnboarding,
+    };
     
     saveData(STORAGE_KEYS.APP_SETTINGS, newSettings);
     set({ theme });
   },
 
   setHapticFeedback: (enabled) => {
-    const newSettings: AppSettings = { ...get(), hapticFeedback: enabled, isLoading: false };
-    delete (newSettings as any).isLoading;
-    delete (newSettings as any).loadSettings;
-    delete (newSettings as any).setComplexityMode;
-    delete (newSettings as any).updateInventorySettings;
-    delete (newSettings as any).setTheme;
-    delete (newSettings as any).setHapticFeedback;
-    delete (newSettings as any).completeOnboarding;
-    delete (newSettings as any).resetToDefaults;
+    const state = get();
+    const newSettings: AppSettings = {
+      complexityMode: state.complexityMode,
+      inventory: state.inventory,
+      theme: state.theme,
+      hapticFeedback: enabled,
+      hasCompletedOnboarding: state.hasCompletedOnboarding,
+    };
     
     saveData(STORAGE_KEYS.APP_SETTINGS, newSettings);
     set({ hapticFeedback: enabled });
   },
 
   completeOnboarding: () => {
-    const newSettings: AppSettings = { ...get(), hasCompletedOnboarding: true, isLoading: false };
-    delete (newSettings as any).isLoading;
-    delete (newSettings as any).loadSettings;
-    delete (newSettings as any).setComplexityMode;
-    delete (newSettings as any).updateInventorySettings;
-    delete (newSettings as any).setTheme;
-    delete (newSettings as any).setHapticFeedback;
-    delete (newSettings as any).completeOnboarding;
-    delete (newSettings as any).resetToDefaults;
+    const state = get();
+    const newSettings: AppSettings = {
+      complexityMode: state.complexityMode,
+      inventory: state.inventory,
+      theme: state.theme,
+      hapticFeedback: state.hapticFeedback,
+      hasCompletedOnboarding: true,
+    };
     
     saveData(STORAGE_KEYS.APP_SETTINGS, newSettings);
     set({ hasCompletedOnboarding: true });

@@ -6,6 +6,9 @@
 import { Project } from '@/src/types/project';
 import { formatCurrency } from './calculations';
 
+// Re-export formatCurrency for convenience
+export { formatCurrency };
+
 /**
  * Calculate total hours for a project
  */
