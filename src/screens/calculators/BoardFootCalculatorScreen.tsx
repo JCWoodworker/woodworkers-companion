@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
-import { View } from 'react-native';
-import { TextInput, Card, Text, SegmentedButtons } from 'react-native-paper';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { TextInput, Card, Text, SegmentedButtons, Button, Badge, IconButton } from 'react-native-paper';
+import { router } from 'expo-router';
 import { calculateBoardFeet, applyWasteFactor, formatCurrency, safeParseFloat } from '@/src/utils';
-import { NOMINAL_THICKNESSES, WASTE_FACTORS } from '@/src/constants';
+import { inchesToQuarters } from '@/src/utils/boardFootConversions';
+import { WASTE_FACTORS } from '@/src/constants';
+import { useBoardFootStore } from '@/src/store/boardFootStore';
+import { useSettingsStore } from '@/src/store/settingsStore';
+import { ThicknessInput } from '@/src/components/calculators/ThicknessInput';
 import { CalculatorLayout } from '@/src/components/common/CalculatorLayout';
-import { calculatorStyles } from '@/src/theme';
+import { calculatorStyles, spacing } from '@/src/theme';
 
 /**
- * Board Foot Calculator Screen
- * Calculates lumber volume in board feet with cost and waste factor
+ * Board Foot Calculator Screen - ENHANCED
+ * Calculates lumber volume with board list management
  */
 export default function BoardFootCalculatorScreen() {
+  const { complexityMode } = useSettingsStore();
+  const { currentList, addBoardToCurrentList, loadBoardLists } = useBoardFootStore();
   
   // Input states
   const [thickness, setThickness] = useState('1');
@@ -21,6 +28,11 @@ export default function BoardFootCalculatorScreen() {
   const [pricePerBF, setPricePerBF] = useState('');
   const [wasteFactor, setWasteFactor] = useState('15');
   
+  // Advanced fields (Professional/Lumber Yard)
+  const [species, setSpecies] = useState('');
+  const [grade, setGrade] = useState('');
+  const [moistureContent, setMoistureContent] = useState('');
+  
   // Results
   const [result, setResult] = useState<{
     boardFeet: number;
@@ -28,6 +40,12 @@ export default function BoardFootCalculatorScreen() {
     totalCost: number;
     costWithWaste: number;
   } | null>(null);
+
+  const isAdvancedMode = complexityMode === 'professional' || complexityMode === 'lumberyard';
+
+  useEffect(() => {
+    loadBoardLists();
+  }, []);
 
   const handleCalculate = () => {
     const t = safeParseFloat(thickness);
@@ -50,35 +68,95 @@ export default function BoardFootCalculatorScreen() {
     }
   };
 
+  const handleAddToList = () => {
+    if (!result) return;
+
+    const t = safeParseFloat(thickness);
+    const w = safeParseFloat(width);
+    const l = safeParseFloat(length);
+    const q = safeParseFloat(quantity, 1);
+    const price = safeParseFloat(pricePerBF);
+
+    addBoardToCurrentList({
+      thickness: t,
+      thicknessQuarters: inchesToQuarters(t),
+      width: w,
+      length: l,
+      lengthUnit,
+      quantity: q,
+      boardFeet: result.boardFeet,
+      species: species || undefined,
+      grade: isAdvancedMode && grade ? grade : undefined,
+      moistureContent: isAdvancedMode && moistureContent ? safeParseFloat(moistureContent) : undefined,
+      pricePerBF: price || undefined,
+      totalCost: result.totalCost || undefined,
+    });
+
+    // Show success and reset for next board
+    handleReset();
+  };
+
   const handleReset = () => {
     setThickness('1');
     setWidth('');
     setLength('');
     setQuantity('1');
     setPricePerBF('');
+    setSpecies('');
+    setGrade('');
+    setMoistureContent('');
     setResult(null);
   };
 
   return (
-    <CalculatorLayout
-      onCalculate={handleCalculate}
-      onReset={handleReset}
-      calculateLabel="Calculate"
-    >
+    <>
+      <View style={styles.headerActions}>
+        <IconButton
+          icon="history"
+          size={24}
+          onPress={() => router.push('/calculators/board-foot-history' as any)}
+        />
+        {currentList.length > 0 && (
+          <View>
+            <IconButton
+              icon="format-list-numbered"
+              size={24}
+              onPress={() => router.push('/calculators/board-foot-list' as any)}
+            />
+            <Badge style={styles.badge} size={18}>
+              {currentList.length}
+            </Badge>
+          </View>
+        )}
+      </View>
+
+      <CalculatorLayout
+        onCalculate={handleCalculate}
+        onReset={handleReset}
+        calculateLabel="Calculate"
+      >
       <Card style={calculatorStyles.card} mode="elevated">
         <Card.Content>
           <Text variant="titleMedium" style={calculatorStyles.sectionTitle}>
             Board Dimensions
           </Text>
 
-          <TextInput
-            label="Thickness (inches)"
+          <ThicknessInput
             value={thickness}
             onChangeText={setThickness}
-            keyboardType="decimal-pad"
-            mode="outlined"
-            style={calculatorStyles.input}
+            label="Thickness"
           />
+
+          {isAdvancedMode && (
+            <TextInput
+              label="Species (optional)"
+              value={species}
+              onChangeText={setSpecies}
+              mode="outlined"
+              style={calculatorStyles.input}
+              placeholder="e.g., Red Oak, Walnut"
+            />
+          )}
 
           <TextInput
             label="Width (inches)"
@@ -119,6 +197,28 @@ export default function BoardFootCalculatorScreen() {
             mode="outlined"
             style={calculatorStyles.input}
           />
+
+          {isAdvancedMode && (
+            <>
+              <TextInput
+                label="Grade (optional)"
+                value={grade}
+                onChangeText={setGrade}
+                mode="outlined"
+                style={calculatorStyles.input}
+                placeholder="e.g., FAS, Select, #1 Common"
+              />
+
+              <TextInput
+                label="Moisture Content % (optional)"
+                value={moistureContent}
+                onChangeText={setMoistureContent}
+                keyboardType="decimal-pad"
+                mode="outlined"
+                style={calculatorStyles.input}
+              />
+            </>
+          )}
         </Card.Content>
       </Card>
 
@@ -193,10 +293,40 @@ export default function BoardFootCalculatorScreen() {
                 </View>
               </>
             )}
+
+            <View style={calculatorStyles.divider} />
+
+            <Button
+              mode="contained"
+              onPress={handleAddToList}
+              icon="plus"
+              style={styles.addButton}
+            >
+              Add to List
+            </Button>
           </Card.Content>
         </Card>
       )}
-    </CalculatorLayout>
+      </CalculatorLayout>
+    </>
   );
 }
 
+const styles = StyleSheet.create({
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    zIndex: 10,
+  },
+  badge: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+  },
+  addButton: {
+    marginTop: spacing.sm,
+  },
+});
