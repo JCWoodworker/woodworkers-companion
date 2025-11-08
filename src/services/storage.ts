@@ -10,10 +10,13 @@ const STORAGE_KEYS = {
   INVENTORY_LUMBER: '@woodworkers_companion:inventory_lumber',
   INVENTORY_TOOLS: '@woodworkers_companion:inventory_tools',
   INVENTORY_CONSUMABLES: '@woodworkers_companion:inventory_consumables',
+  INVENTORY_HARDWARE: '@woodworkers_companion:inventory_hardware',
+  INVENTORY_CATEGORIES: '@woodworkers_companion:inventory_categories',
   CLIENTS: '@woodworkers_companion:clients',
   QUOTES: '@woodworkers_companion:quotes',
   INVOICES: '@woodworkers_companion:invoices',
   USER_PREFERENCES: '@woodworkers_companion:preferences',
+  APP_SETTINGS: '@woodworkers_companion:app_settings',
 } as const;
 
 export { STORAGE_KEYS };

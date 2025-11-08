@@ -12,9 +12,30 @@ export default function InventoryLayout() {
         }}
       />
       <Stack.Screen
-        name="add-lumber"
+        name="add"
         options={{
-          title: 'Add Lumber',
+          title: 'Add Item',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="detail/[id]"
+        options={{
+          title: 'Item Details',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="categories"
+        options={{
+          title: 'Manage Categories',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="analytics"
+        options={{
+          title: 'Analytics',
           headerShown: true,
         }}
       />

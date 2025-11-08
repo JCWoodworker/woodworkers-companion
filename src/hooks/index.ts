@@ -1,22 +1,14 @@
 /**
- * Custom hooks
+ * Custom hooks export
  */
 
-// Re-export existing hooks for convenience
-export { useColorScheme } from '@/hooks/use-color-scheme';
-
-// App-specific hooks
-export { useCalculatorScreen } from './useCalculatorScreen';
-
-// Form input hooks
-export { 
-  useTextInput, 
-  useNumberInput, 
-  useFormState, 
-  useToggle,
-  useArrayState 
-} from './useFormInput';
-
-// Persisted state hook
-export { usePersistedState } from './usePersistedState';
-
+export * from './useCalculatorScreen';
+export * from './useFormInput';
+export * from './usePersistedState';
+export * from './useFieldVisibility';
+export * from './useCategorySettings';
+export * from './useInventoryFilter';
+export * from './useInventorySort';
+export * from './useWizardState';
+export * from './useIndividualBoards';
+export * from './useProjectMaterials';

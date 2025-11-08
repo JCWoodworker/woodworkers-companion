@@ -1,0 +1,4 @@
+android configs for app permissions?
+code splitting and smaller components?
+icons for the app?
+iOS compatibility?

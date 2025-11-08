@@ -1,18 +1,26 @@
 /**
- * Inventory Screen (MVP)
- * Simple lumber, tools, and consumables tracking
+ * Inventory Screen
+ * Comprehensive inventory management with dynamic categories
  */
 
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Text, Card, FAB, List, IconButton, Searchbar, SegmentedButtons, useTheme, Button } from 'react-native-paper';
+import { ScrollView, StyleSheet, View, RefreshControl } from 'react-native';
+import { Text, Searchbar, SegmentedButtons, useTheme, IconButton } from 'react-native-paper';
 import { router } from 'expo-router';
 import { useInventoryStore } from '@/src/store/inventoryStore';
+import { useSettingsStore } from '@/src/store/settingsStore';
+import { useCategorySettings } from '@/src/hooks/useCategorySettings';
+import { useInventoryFilter } from '@/src/hooks/useInventoryFilter';
+import { useInventorySort } from '@/src/hooks/useInventorySort';
+import { InventoryCard } from '@/src/components/inventory/InventoryCard';
+import { QuickAddFAB } from '@/src/components/inventory/QuickAddFAB';
+import { SortButton } from '@/src/components/inventory/SortButton';
+import { LowStockBanner } from '@/src/components/inventory/LowStockBanner';
 import { EmptyState } from '@/src/components/common/EmptyState';
 import { ConfirmDialog } from '@/src/components/common/ConfirmDialog';
 import { spacing } from '@/src/theme';
 import { formatCurrency } from '@/src/utils';
-import { InventoryTab } from '@/src/types/inventory';
+import { InventoryTab, InventoryFilter, SortOptions } from '@/src/types/inventory';
 
 export default function InventoryScreen() {
   const theme = useTheme();
@@ -20,75 +28,327 @@ export default function InventoryScreen() {
     lumber,
     tools,
     consumables,
+    hardware,
+    customItems,
     isLoading,
     loadInventory,
     removeLumber,
     removeTool,
     removeConsumable,
+    removeHardware,
+    removeCustomItem,
     getTotalBoardFeet,
     getTotalLumberValue,
+    getTotalInventoryValue,
     getLowStockConsumables,
+    getLowStockHardware,
   } = useInventoryStore();
 
-  const [activeTab, setActiveTab] = useState<InventoryTab>('lumber');
+  const { inventory } = useSettingsStore();
+  const { activeCategories, isCategoryEnabled } = useCategorySettings();
+
+  const [activeTab, setActiveTab] = useState<InventoryTab>(activeCategories[0] || 'lumber');
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortOptions, setSortOptions] = useState<SortOptions>({
+    field: inventory.defaultSortBy,
+    order: inventory.defaultSortOrder,
+  });
+  const [showLowStockBanner, setShowLowStockBanner] = useState(true);
   const [deleteDialog, setDeleteDialog] = useState<{
     visible: boolean;
-    type: 'lumber' | 'tool' | 'consumable';
+    type: InventoryTab;
     id: string;
     name: string;
   } | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     loadInventory();
   }, []);
 
-  const filteredLumber = lumber.filter((l) =>
-    l.species.toLowerCase().includes(searchQuery.toLowerCase())
+  const filter: InventoryFilter = {
+    searchQuery,
+  };
+
+  // Apply filtering and sorting
+  const filteredLumber = useInventorySort(
+    useInventoryFilter(lumber, filter),
+    sortOptions
+  );
+  const filteredTools = useInventorySort(
+    useInventoryFilter(tools, filter),
+    sortOptions
+  );
+  const filteredConsumables = useInventorySort(
+    useInventoryFilter(consumables, filter),
+    sortOptions
+  );
+  const filteredHardware = useInventorySort(
+    useInventoryFilter(hardware, filter),
+    sortOptions
+  );
+  const filteredCustomItems = useInventorySort(
+    useInventoryFilter(customItems, filter),
+    sortOptions
   );
 
-  const filteredTools = tools.filter((t) =>
-    t.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const lowStockCount = getLowStockConsumables().length + getLowStockHardware().length;
 
-  const filteredConsumables = consumables.filter((c) =>
-    c.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const lowStock = getLowStockConsumables();
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await loadInventory();
+    setRefreshing(false);
+  };
 
   const handleDelete = () => {
     if (!deleteDialog) return;
     
-    if (deleteDialog.type === 'lumber') removeLumber(deleteDialog.id);
-    else if (deleteDialog.type === 'tool') removeTool(deleteDialog.id);
-    else if (deleteDialog.type === 'consumable') removeConsumable(deleteDialog.id);
+    switch (deleteDialog.type) {
+      case 'lumber':
+        removeLumber(deleteDialog.id);
+        break;
+      case 'tools':
+        removeTool(deleteDialog.id);
+        break;
+      case 'consumables':
+        removeConsumable(deleteDialog.id);
+        break;
+      case 'hardware':
+        removeHardware(deleteDialog.id);
+        break;
+      case 'custom':
+        removeCustomItem(deleteDialog.id);
+        break;
+    }
     
     setDeleteDialog(null);
   };
 
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <View style={styles.titleRow}>
+        <Text variant="displaySmall" style={styles.title}>
+          Inventory
+        </Text>
+        <View style={styles.headerActions}>
+          {inventory.features.analytics && (
+            <IconButton
+              icon="chart-bar"
+              size={24}
+              onPress={() => router.push('/inventory/analytics')}
+            />
+          )}
+          <IconButton
+            icon="cog"
+            size={24}
+            onPress={() => router.push('/settings/inventory')}
+          />
+        </View>
+      </View>
+      
+      {activeTab === 'lumber' && (
+        <Text variant="bodyMedium" style={styles.subtitle}>
+          {getTotalBoardFeet().toFixed(0)} BF • {formatCurrency(getTotalLumberValue())}
+        </Text>
+      )}
+
+      {activeTab === 'lumber' && inventory.features.analytics && (
+        <Text variant="bodySmall" style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}>
+          Total inventory value: {formatCurrency(getTotalInventoryValue())}
+        </Text>
+      )}
+    </View>
+  );
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'lumber':
+        if (filteredLumber.length === 0) {
+          return (
+            <EmptyState
+              icon="tree"
+              title={searchQuery ? 'No lumber found' : 'No lumber in inventory'}
+              description={searchQuery ? 'Try adjusting your search' : 'Add lumber from your stock or recent purchases'}
+              actionLabel={searchQuery ? undefined : 'Add Lumber'}
+              onAction={searchQuery ? undefined : () => router.push('/inventory/add?type=lumber')}
+            />
+          );
+        }
+        return filteredLumber.map((entry) => (
+          <InventoryCard
+            key={entry.id}
+            item={entry}
+            type="lumber"
+            onPress={() => router.push(`/inventory/detail/${entry.id}?type=lumber`)}
+            onDelete={() => setDeleteDialog({
+              visible: true,
+              type: 'lumber',
+              id: entry.id,
+              name: entry.species,
+            })}
+          />
+        ));
+
+      case 'tools':
+        if (filteredTools.length === 0) {
+          return (
+            <EmptyState
+              icon="hammer-wrench"
+              title="No tools in registry"
+              description="Track your tools and maintenance schedules"
+              actionLabel="Add Tool"
+              onAction={() => router.push('/inventory/add?type=tool')}
+            />
+          );
+        }
+        return filteredTools.map((tool) => (
+          <InventoryCard
+            key={tool.id}
+            item={tool}
+            type="tool"
+            onPress={() => router.push(`/inventory/detail/${tool.id}?type=tool`)}
+            onDelete={() => setDeleteDialog({
+              visible: true,
+              type: 'tools',
+              id: tool.id,
+              name: tool.name,
+            })}
+          />
+        ));
+
+      case 'consumables':
+        if (filteredConsumables.length === 0) {
+          return (
+            <EmptyState
+              icon="package-variant"
+              title="No consumables tracked"
+              description="Track sandpaper, glue, finish, and other supplies"
+              actionLabel="Add Consumable"
+              onAction={() => router.push('/inventory/add?type=consumable')}
+            />
+          );
+        }
+        return filteredConsumables.map((item) => (
+          <InventoryCard
+            key={item.id}
+            item={item}
+            type="consumable"
+            onPress={() => router.push(`/inventory/detail/${item.id}?type=consumable`)}
+            onDelete={() => setDeleteDialog({
+              visible: true,
+              type: 'consumables',
+              id: item.id,
+              name: item.name,
+            })}
+            showLowStockBadge
+          />
+        ));
+
+      case 'hardware':
+        if (filteredHardware.length === 0) {
+          return (
+            <EmptyState
+              icon="screw-machine-flat-top"
+              title="No hardware tracked"
+              description="Track screws, hinges, slides, and other hardware"
+              actionLabel="Add Hardware"
+              onAction={() => router.push('/inventory/add?type=hardware')}
+            />
+          );
+        }
+        return filteredHardware.map((item) => (
+          <InventoryCard
+            key={item.id}
+            item={item}
+            type="hardware"
+            onPress={() => router.push(`/inventory/detail/${item.id}?type=hardware`)}
+            onDelete={() => setDeleteDialog({
+              visible: true,
+              type: 'hardware',
+              id: item.id,
+              name: item.name,
+            })}
+            showLowStockBadge
+          />
+        ));
+
+      case 'custom':
+        if (filteredCustomItems.length === 0) {
+          return (
+            <EmptyState
+              icon="shape-plus"
+              title="No custom items"
+              description="Create custom categories for your unique needs"
+              actionLabel="Manage Categories"
+              onAction={() => router.push('/inventory/categories')}
+            />
+          );
+        }
+        return filteredCustomItems.map((item) => (
+          <InventoryCard
+            key={item.id}
+            item={item}
+            type="custom"
+            onPress={() => router.push(`/inventory/detail/${item.id}?type=custom`)}
+            onDelete={() => setDeleteDialog({
+              visible: true,
+              type: 'custom',
+              id: item.id,
+              name: item.name,
+            })}
+          />
+        ));
+
+      default:
+        return null;
+    }
+  };
+
+  // Build tab buttons from active categories
+  const tabButtons = activeCategories.map((category) => {
+    const counts = {
+      lumber: lumber.length,
+      tools: tools.length,
+      consumables: consumables.length,
+      hardware: hardware.length,
+      custom: customItems.length,
+    };
+
+    const labels = {
+      lumber: 'Lumber',
+      tools: 'Tools',
+      consumables: 'Items',
+      hardware: 'Hardware',
+      custom: 'Custom',
+    };
+
+    return {
+      value: category,
+      label: `${labels[category]} (${counts[category]})`,
+    };
+  });
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.header}>
-          <Text variant="displaySmall" style={styles.title}>
-            Inventory
-          </Text>
-          
-          {activeTab === 'lumber' && (
-            <Text variant="bodyMedium" style={styles.subtitle}>
-              {getTotalBoardFeet().toFixed(0)} BF • {formatCurrency(getTotalLumberValue())}
-            </Text>
-          )}
+      <ScrollView
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
+      >
+        {renderHeader()}
 
-          {lowStock.length > 0 && (
-            <View style={styles.alert}>
-              <Text variant="bodySmall" style={styles.alertText}>
-                ⚠️ {lowStock.length} item{lowStock.length > 1 ? 's' : ''} low on stock
-              </Text>
-            </View>
-          )}
-        </View>
+        {inventory.features.lowStockAlerts && lowStockCount > 0 && (
+          <LowStockBanner
+            count={lowStockCount}
+            visible={showLowStockBanner}
+            onDismiss={() => setShowLowStockBanner(false)}
+            onViewItems={() => {
+              setActiveTab('consumables');
+              setShowLowStockBanner(false);
+            }}
+          />
+        )}
 
         <Searchbar
           placeholder="Search inventory..."
@@ -97,143 +357,31 @@ export default function InventoryScreen() {
           style={styles.searchBar}
         />
 
-        <SegmentedButtons
-          value={activeTab}
-          onValueChange={(value) => setActiveTab(value as InventoryTab)}
-          buttons={[
-            { value: 'lumber', label: `Lumber (${lumber.length})` },
-            { value: 'tools', label: `Tools (${tools.length})` },
-            { value: 'consumables', label: `Items (${consumables.length})` },
-          ]}
-          style={styles.tabs}
-        />
+        <View style={styles.controls}>
+          <SortButton
+            value={sortOptions}
+            onChange={setSortOptions}
+          />
+        </View>
 
-        {activeTab === 'lumber' && (
-          filteredLumber.length === 0 ? (
-            <EmptyState
-              icon="tree"
-              title={searchQuery ? 'No lumber found' : 'No lumber in inventory'}
-              description={searchQuery ? undefined : 'Add lumber from your stock or recent purchases'}
-              actionLabel={searchQuery ? undefined : 'Add Lumber'}
-              onAction={searchQuery ? undefined : () => router.push('/inventory/add-lumber')}
-            />
-          ) : (
-            filteredLumber.map((entry) => (
-              <Card key={entry.id} style={styles.card} mode="elevated">
-                <Card.Content>
-                  <View style={styles.cardHeader}>
-                    <Text variant="titleMedium" style={styles.cardTitle}>
-                      {entry.species}
-                    </Text>
-                    <IconButton
-                      icon="delete"
-                      size={20}
-                      onPress={() => setDeleteDialog({
-                        visible: true,
-                        type: 'lumber',
-                        id: entry.id,
-                        name: entry.species,
-                      })}
-                    />
-                  </View>
-                  <Text variant="bodyMedium">
-                    {entry.thickness}" thick • {entry.boardFeet.toFixed(1)} BF
-                  </Text>
-                  <Text variant="bodyMedium">
-                    {formatCurrency(entry.costPerBF)}/BF • Total: {formatCurrency(entry.totalCost)}
-                  </Text>
-                  {entry.location && (
-                    <Text variant="bodySmall" style={styles.location}>
-                      📍 {entry.location}
-                    </Text>
-                  )}
-                </Card.Content>
-              </Card>
-            ))
-          )
+        {tabButtons.length > 1 && (
+          <SegmentedButtons
+            value={activeTab}
+            onValueChange={(value) => setActiveTab(value as InventoryTab)}
+            buttons={tabButtons}
+            style={styles.tabs}
+          />
         )}
 
-        {activeTab === 'tools' && (
-          filteredTools.length === 0 ? (
-            <EmptyState
-              icon="hammer-wrench"
-              title="No tools in registry"
-              description="Track your tools and maintenance schedules"
-            />
-          ) : (
-            filteredTools.map((tool) => (
-              <List.Item
-                key={tool.id}
-                title={tool.name}
-                description={tool.lastMaintenance ? `Last maintained: ${new Date(tool.lastMaintenance).toLocaleDateString()}` : 'No maintenance logged'}
-                left={() => <List.Icon icon="hammer-wrench" />}
-                right={() => (
-                  <IconButton
-                    icon="delete"
-                    size={20}
-                    onPress={() => setDeleteDialog({
-                      visible: true,
-                      type: 'tool',
-                      id: tool.id,
-                      name: tool.name,
-                    })}
-                  />
-                )}
-              />
-            ))
-          )
-        )}
-
-        {activeTab === 'consumables' && (
-          filteredConsumables.length === 0 ? (
-            <EmptyState
-              icon="package-variant"
-              title="No consumables tracked"
-              description="Track sandpaper, glue, finish, and other supplies"
-            />
-          ) : (
-            filteredConsumables.map((item) => {
-              const isLowStock = item.reorderLevel !== undefined && item.quantity <= item.reorderLevel;
-              
-              return (
-                <List.Item
-                  key={item.id}
-                  title={item.name}
-                  description={`${item.quantity} ${item.unit}${isLowStock ? ' • ⚠️ Low stock' : ''}`}
-                  left={() => <List.Icon icon="package-variant" />}
-                  right={() => (
-                    <IconButton
-                      icon="delete"
-                      size={20}
-                      onPress={() => setDeleteDialog({
-                        visible: true,
-                        type: 'consumable',
-                        id: item.id,
-                        name: item.name,
-                      })}
-                    />
-                  )}
-                  titleStyle={isLowStock ? styles.lowStock : undefined}
-                />
-              );
-            })
-          )
-        )}
+        {renderContent()}
       </ScrollView>
 
-      <FAB
-        icon="plus"
-        style={styles.fab}
-        onPress={() => {
-          if (activeTab === 'lumber') router.push('/inventory/add-lumber');
-        }}
-        label={`Add ${activeTab === 'lumber' ? 'Lumber' : activeTab === 'tools' ? 'Tool' : 'Item'}`}
-      />
+      <QuickAddFAB defaultCategory={activeTab !== 'custom' ? activeTab : undefined} />
 
       {deleteDialog && (
         <ConfirmDialog
           visible={deleteDialog.visible}
-          title={`Delete ${deleteDialog.type}`}
+          title={`Delete ${deleteDialog.type.slice(0, -1)}`}
           message={`Are you sure you want to delete "${deleteDialog.name}"?`}
           confirmLabel="Delete"
           onConfirm={handleDelete}
@@ -256,51 +404,29 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: spacing.lg,
   },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   title: {
     fontWeight: 'bold',
-    marginBottom: spacing.xs,
+  },
+  headerActions: {
+    flexDirection: 'row',
   },
   subtitle: {
-    opacity: 0.7,
-    marginBottom: spacing.sm,
-  },
-  alert: {
-    backgroundColor: '#FFF3CD',
-    padding: spacing.sm,
-    borderRadius: 8,
-    marginTop: spacing.sm,
-  },
-  alertText: {
-    color: '#856404',
+    marginTop: spacing.xs,
   },
   searchBar: {
+    marginBottom: spacing.md,
+  },
+  controls: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     marginBottom: spacing.md,
   },
   tabs: {
     marginBottom: spacing.lg,
   },
-  card: {
-    marginBottom: spacing.md,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  cardTitle: {
-    fontWeight: '600',
-  },
-  location: {
-    opacity: 0.7,
-    marginTop: spacing.xs,
-  },
-  lowStock: {
-    color: '#B00020',
-  },
-  fab: {
-    position: 'absolute',
-    right: spacing.base,
-    bottom: spacing.base,
-  },
 });
-
