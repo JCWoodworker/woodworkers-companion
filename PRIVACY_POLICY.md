@@ -21,6 +21,7 @@ The Woodworker's Companion allows you to create and store the following types of
 ### Automatically Collected Data
 
 We do **NOT** collect:
+
 - No analytics or tracking data
 - No usage statistics
 - No device identifiers
@@ -32,10 +33,12 @@ We do **NOT** collect:
 ### Local Storage Only
 
 **All data is stored locally on your device** using:
+
 - Android: AsyncStorage (local device storage)
 - iOS: AsyncStorage (local device storage)
 
-**Important**: 
+**Important**:
+
 - No data is transmitted to our servers or any third-party servers
 - No cloud backup or synchronization (unless you manually export data)
 - Data never leaves your device unless you explicitly share it
@@ -57,6 +60,7 @@ The data you enter is used **exclusively** for:
 4. **Organizing and managing** your inventory and projects
 
 We do **NOT**:
+
 - Share your data with anyone
 - Sell your data to third parties
 - Use your data for advertising
@@ -71,6 +75,7 @@ The Woodworker's Companion allows you to:
 - **Share quotes**: You can share generated quotes via your device's sharing features (email, messaging, etc.)
 
 When you share data using these features:
+
 - You control who receives it
 - Data is shared through your device's standard sharing mechanisms
 - We do not receive or store any shared data
@@ -80,14 +85,16 @@ When you share data using these features:
 ### Expo Framework
 
 The app is built using Expo, a React Native framework. Expo may collect:
+
 - Error logs and crash reports (if you consent in your device settings)
 - Basic app performance metrics
 
-For Expo's privacy practices, see: https://expo.dev/privacy
+For Expo's privacy practices, see: <https://expo.dev/privacy>
 
 ### No Other Third Parties
 
 We do **NOT** use:
+
 - Analytics services (Google Analytics, Firebase, etc.)
 - Advertising networks
 - Social media integrations
@@ -97,16 +104,46 @@ We do **NOT** use:
 
 ## Permissions
 
-The Woodworker's Companion may request the following Android/iOS permissions:
+The Woodworker's Companion requests the following permissions:
 
-### Current Permissions:
-- **Storage/Files**: To save and load your project and inventory data locally on your device
+### Android Permissions
 
-### Future Permissions (if features are enabled):
-- **Camera**: To attach photos to inventory items or projects (optional, only if you use photo features)
-- **Photo Library**: To select existing photos from your device (optional)
+- **INTERNET**: Required for app functionality (though no data is transmitted to servers)
+- **READ_EXTERNAL_STORAGE**: To access and save your local data files
+- **WRITE_EXTERNAL_STORAGE**: To save your project and inventory data locally on your device
+- **CAMERA**: Optional. Only used if you choose to attach photos to inventory items or projects. This feature is currently disabled by default and only available in Professional mode settings.
+- **VIBRATE**: To provide haptic feedback when you interact with the app (can be disabled in settings)
+- **SYSTEM_ALERT_WINDOW**: For development mode only (not used in production builds)
 
-**Important**: All permissions are optional and only requested when you use specific features. The core functionality works without any special permissions.
+### iOS Permissions
+
+- **Storage**: To save and load your project and inventory data locally on your device
+- **Camera** (optional): To attach photos to inventory items or projects (only if you enable photo features)
+- **Photo Library** (optional): To select existing photos from your device (only if you enable photo features)
+
+### How Permissions Are Used
+
+**Camera Permission**:
+
+- Only requested when you explicitly try to add a photo to an inventory item
+- You can use the app fully without ever granting camera permission
+- Camera access is completely optional
+- No photos are uploaded to servers - they stay on your device
+- This feature is disabled by default in Hobbyist mode
+
+**Storage Permissions**:
+
+- Required to save your work locally on your device
+- All data stays on your device
+- No data is sent to external servers
+
+**Vibrate Permission**:
+
+- Provides haptic feedback for button presses
+- Enhances user experience
+- Can be disabled in Settings
+
+**Important**: All camera and photo permissions are optional. The core functionality (calculators, project management, inventory) works without any camera access. Permissions are only requested when you use specific features.
 
 ## Children's Privacy
 
@@ -126,20 +163,23 @@ The Woodworker's Companion is not directed to children under the age of 13. We d
 
 You have complete control over your data:
 
-### You Can:
+### You Can
+
 - ✅ **View** all your data within the app
 - ✅ **Edit** any information you've entered
 - ✅ **Delete** individual items or all data
 - ✅ **Export** your data (when enabled in settings)
 - ✅ **Control** which features and fields are visible (Hobbyist/Professional/Custom modes)
 
-### Data Deletion:
+### Data Deletion
+
 - **Within App**: Delete individual projects, inventory items, clients, or quotes
 - **Complete Deletion**: Clear app data in device settings or uninstall the app
 
 ## Changes to This Privacy Policy
 
 We may update this Privacy Policy from time to time. We will notify you of any changes by:
+
 - Updating the "Last Updated" date at the top of this policy
 - Displaying a notice in the app (for significant changes)
 
@@ -148,6 +188,7 @@ Continued use of the app after changes constitutes acceptance of the updated pol
 ## Data Breaches
 
 Since all data is stored locally on your device and never transmitted to our servers:
+
 - There is no risk of server-side data breaches
 - Your data security depends on your device security
 - We recommend using device lock screens and encryption
@@ -159,6 +200,7 @@ The Woodworker's Companion stores all data locally on your device. No data is tr
 ## California Privacy Rights (CCPA)
 
 For California residents:
+
 - We do not sell your personal information
 - We do not share your personal information with third parties
 - You have the right to request deletion of your data (simply delete items in the app or uninstall)
@@ -166,6 +208,7 @@ For California residents:
 ## European Privacy Rights (GDPR)
 
 For EU/EEA residents:
+
 - **Legal Basis**: We process data based on your consent (you choose what to enter)
 - **Data Controller**: You are the controller of your data; we merely provide the tools
 - **Data Processing**: All processing happens locally on your device
@@ -184,6 +227,7 @@ If you have questions about this Privacy Policy or our data practices:
 ## App Store Compliance
 
 This app complies with:
+
 - Google Play Store policies
 - Apple App Store guidelines (if applicable)
 - COPPA (Children's Online Privacy Protection Act)
@@ -215,6 +259,7 @@ For the Google Play Store Data Safety section, declare:
 **Data Collection**: YES (you collect data the user enters)
 
 **Data Types Collected**:
+
 - ✅ User-generated content (projects, notes, client information)
 - ❌ Personal information (not automatically collected)
 - ❌ Financial information (not transmitted)
@@ -222,21 +267,25 @@ For the Google Play Store Data Safety section, declare:
 - ❌ Device identifiers (not collected)
 
 **Data Usage**:
+
 - ✅ App functionality (to display and calculate)
 - ❌ Analytics (not used)
 - ❌ Advertising (not used)
 - ❌ Personalization (not used)
 
 **Data Sharing**:
+
 - ❌ No data is shared with third parties
 
 **Data Security**:
+
 - ✅ Data is encrypted in transit (N/A - no transmission)
 - ✅ Data is stored securely on device
 - ❌ No option to delete data (FALSE - users can delete data)
 
 **Data Deletion**:
 Users can request data deletion by:
+
 - Deleting items within the app
 - Clearing app data in device settings
 - Uninstalling the app
@@ -245,4 +294,3 @@ Users can request data deletion by:
 
 **Version**: 1.0
 **Effective Date**: November 8, 2025
-

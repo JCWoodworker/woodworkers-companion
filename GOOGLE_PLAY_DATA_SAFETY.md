@@ -45,10 +45,17 @@ When submitting to Google Play Console, here's exactly what to select:
 - ❌ Other in-app messages
 
 ### Photos and Videos
-- ❌ Photos (currently not implemented)
+- ✅ **Photos** (optional - only if user explicitly adds photos)
 - ❌ Videos
 
-**Note**: Photo attachment infrastructure exists but feature is not yet active. If you enable it in the future, select ✅ Photos.
+**Select**: ✅ Photos
+
+**Important Details**:
+- Photos are OPTIONAL - only collected if user explicitly adds them to inventory items
+- Camera permission is only requested when user tries to add a photo
+- Photos are stored locally on device only
+- Photos are NOT transmitted or shared
+- Feature is disabled by default (requires Professional mode in settings)
 
 ### Audio Files
 - ❌ Voice or sound recordings
@@ -90,6 +97,8 @@ When submitting to Google Play Console, here's exactly what to select:
 
 ## Step 3: Data Usage (for "Other user-generated content")
 
+**For user-generated content (projects, inventory, quotes):**
+
 **Is this data collected, shared, or both?**
 - ✅ **Collected**
 - ❌ Shared
@@ -98,17 +107,32 @@ When submitting to Google Play Console, here's exactly what to select:
 - ❌ No (data is stored locally)
 
 **Is this data required or optional?**
-- ❌ Required for app functionality
 - ✅ **Optional** (users choose what to enter)
 
 **Why is this user data collected?**
 - ✅ **App functionality** (to display and organize user's woodworking data)
+
+---
+
+## Step 3b: Data Usage (for "Photos")
+
+**For photos (if collected):**
+
+**Is this data collected, shared, or both?**
+- ✅ **Collected**
+- ❌ Shared
+
+**Is this data processed ephemerally?**
+- ❌ No (stored locally on device)
+
+**Is this data required or optional?**
+- ✅ **Optional** (user explicitly chooses to add photos)
+
+**Why is this user data collected?**
+- ✅ **App functionality** (to attach visual references to inventory items)
 - ❌ Analytics
-- ❌ Developer communications
 - ❌ Advertising or marketing
-- ❌ Fraud prevention, security, and compliance
-- ❌ Personalization
-- ❌ Account management
+- ❌ Other purposes
 
 ---
 

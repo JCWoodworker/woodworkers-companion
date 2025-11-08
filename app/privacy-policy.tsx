@@ -134,6 +134,30 @@ export default function PrivacyPolicyScreen() {
         <Card style={styles.card} mode="elevated">
           <Card.Content>
             <Text variant="headlineSmall" style={styles.sectionTitle}>
+              Permissions
+            </Text>
+            
+            <Text variant="bodyMedium" style={styles.paragraph}>
+              The Woodworker's Companion requests the following permissions:
+            </Text>
+
+            <Text variant="titleMedium" style={styles.subsectionTitle}>
+              Android Permissions
+            </Text>
+            <Text variant="bodyMedium" style={styles.bulletPoint}>• <Text style={styles.bold}>CAMERA</Text>: Optional. Only used if you choose to attach photos to inventory items. This feature is disabled by default and only available in Professional mode.</Text>
+            <Text variant="bodyMedium" style={styles.bulletPoint}>• <Text style={styles.bold}>READ/WRITE_EXTERNAL_STORAGE</Text>: To save your project and inventory data locally on your device</Text>
+            <Text variant="bodyMedium" style={styles.bulletPoint}>• <Text style={styles.bold}>VIBRATE</Text>: To provide haptic feedback (can be disabled in settings)</Text>
+            <Text variant="bodyMedium" style={styles.bulletPoint}>• <Text style={styles.bold}>INTERNET</Text>: Required for app framework (no data is transmitted)</Text>
+
+            <Text variant="bodyMedium" style={[styles.paragraph, { marginTop: spacing.md }]}>
+              <Text style={styles.bold}>Camera Permission:</Text> Only requested when you explicitly try to add a photo. You can use the app fully without granting camera permission. No photos are uploaded to servers.
+            </Text>
+          </Card.Content>
+        </Card>
+
+        <Card style={styles.card} mode="elevated">
+          <Card.Content>
+            <Text variant="headlineSmall" style={styles.sectionTitle}>
               Third-Party Services
             </Text>
             

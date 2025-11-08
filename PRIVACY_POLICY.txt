@@ -21,9 +21,10 @@ THIRD-PARTY SERVICES
 The app uses Expo framework. No other third-party services are used. No analytics, advertising, or tracking.
 
 PERMISSIONS
-- Storage: To save and load your data locally on your device
-- Camera (optional): To attach photos to items (if enabled)
-- Photo Library (optional): To select photos (if enabled)
+- CAMERA (optional): Only used if you choose to attach photos to inventory items. Feature is disabled by default. Photos stay on your device.
+- READ/WRITE_EXTERNAL_STORAGE: To save your project and inventory data locally
+- VIBRATE: For haptic feedback (can be disabled in settings)
+- INTERNET: Required by app framework (no data transmitted to servers)
 
 DATA RETENTION
 Data is stored on your device indefinitely until you delete it or uninstall the app.
