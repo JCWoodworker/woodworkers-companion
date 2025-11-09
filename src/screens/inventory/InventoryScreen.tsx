@@ -11,6 +11,7 @@ import { useSettingsStore } from '@/src/store/settingsStore';
 import { useCategorySettings } from '@/src/hooks/useCategorySettings';
 import { useInventoryFilter } from '@/src/hooks/useInventoryFilter';
 import { useInventorySort } from '@/src/hooks/useInventorySort';
+import { usePlatformSafeArea } from '@/src/hooks/usePlatformSafeArea';
 import { InventoryHeader } from '@/src/components/inventory/InventoryHeader';
 import { InventoryList } from '@/src/components/inventory/InventoryList';
 import { QuickAddFAB } from '@/src/components/inventory/QuickAddFAB';
@@ -22,6 +23,7 @@ import { InventoryTab, InventoryFilter, SortOptions } from '@/src/types/inventor
 
 export default function InventoryScreen() {
   const theme = useTheme();
+  const { contentPaddingBottom } = usePlatformSafeArea();
   const {
     lumber,
     tools,
@@ -148,7 +150,7 @@ export default function InventoryScreen() {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ScrollView
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, { paddingBottom: contentPaddingBottom + 100 }]}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         }
@@ -232,7 +234,6 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: spacing.base,
-    paddingBottom: 100,
   },
   searchBar: {
     marginBottom: spacing.md,

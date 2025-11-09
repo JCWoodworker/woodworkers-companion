@@ -35,7 +35,7 @@ android/local.properties
 *.ap_
 *.dex
 
-# iOS (for future)
+# iOS
 ios/Pods/
 ios/build/
 ios/**/*.mode1v3

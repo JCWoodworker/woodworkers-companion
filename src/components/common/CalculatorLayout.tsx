@@ -4,9 +4,10 @@
  */
 
 import React, { ReactNode } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useCalculatorScreen } from '@/src/hooks/useCalculatorScreen';
+import { usePlatformSafeArea } from '@/src/hooks/usePlatformSafeArea';
 import { spacing, touchTargets } from '@/src/theme';
 import { haptics } from '@/src/theme/animations';
 
@@ -28,6 +29,7 @@ export const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({
   isCalculateDisabled = false,
 }) => {
   const { backgroundColor } = useCalculatorScreen();
+  const { contentPaddingBottom } = usePlatformSafeArea();
 
   const handleCalculate = async () => {
     await haptics.medium();
@@ -41,33 +43,43 @@ export const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({
   };
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor }]}
-      contentContainerStyle={styles.contentContainer}
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
-      {children}
-      
-      <View style={styles.buttonContainer}>
-        <Button
-          mode="contained"
-          onPress={handleCalculate}
-          style={styles.button}
-          icon={calculateIcon}
-          disabled={isCalculateDisabled}
-        >
-          {calculateLabel}
-        </Button>
+      <ScrollView
+        style={[styles.container, { backgroundColor }]}
+        contentContainerStyle={[
+          styles.contentContainer,
+          { paddingBottom: contentPaddingBottom + spacing.xl }
+        ]}
+        keyboardShouldPersistTaps="handled"
+      >
+        {children}
+        
+        <View style={styles.buttonContainer}>
+          <Button
+            mode="contained"
+            onPress={handleCalculate}
+            style={styles.button}
+            icon={calculateIcon}
+            disabled={isCalculateDisabled}
+          >
+            {calculateLabel}
+          </Button>
 
-        <Button
-          mode="outlined"
-          onPress={handleReset}
-          style={styles.button}
-          icon="refresh"
-        >
-          Reset
-        </Button>
-      </View>
-    </ScrollView>
+          <Button
+            mode="outlined"
+            onPress={handleReset}
+            style={styles.button}
+            icon="refresh"
+          >
+            Reset
+          </Button>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -77,7 +89,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: spacing.base,
-    paddingBottom: spacing.xl,
   },
   buttonContainer: {
     gap: spacing.md,
