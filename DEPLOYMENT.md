@@ -10,16 +10,19 @@ If you are updating an app that is already on the Google Play Store but was buil
 
 **You MUST sign the new version with the SAME keystore as the original app.**
 
-### If you used EAS Build before:
+### If you used EAS Build before
+
 1. Link this project to the **same Expo Project ID** in `app.json`.
 2. Run `eas build` - EAS will automatically use the stored credentials.
 
-### If you have the keystore file (.jks or .keystore):
+### If you have the keystore file (.jks or .keystore)
+
 1. Run `eas credentials`
 2. Select "Android" > "Production" > "Keystore: Upload your own"
 3. Follow the prompts to upload your original keystore file, alias, and passwords.
 
-### If you LOST the keystore:
+### If you LOST the keystore
+
 You must contact Google Play Support to reset your upload key. You cannot simply upload a new app with a different key; Google will reject it.
 
 ---
@@ -31,6 +34,7 @@ You must contact Google Play Support to reset your upload key. You cannot simply
 ```bash
 ./scripts/deploy-play-store.sh
 ```
+
 This script handles version bumping, building, and submitting to the 'internal' track automatically.
 
 ### Manual Build
@@ -52,6 +56,7 @@ npm run build:android:production
 5. Submit for review (1-7 days)
 
 ### Required for Submission
+
 - ✅ Privacy Policy URL: `https://your-site.netlify.app/privacy-policy`
 - ✅ Screenshots (5-8 images)
 - ✅ Feature graphic (1024×500px)
@@ -76,20 +81,23 @@ npm run preview:web
 
 ### Deploy to Netlify
 
-**Option 1: CLI**
+- Option 1: CLI
+
 ```bash
 npm install -g netlify-cli
 netlify deploy --prod
 ```
 
-**Option 2: GitHub Auto-Deploy**
+- Option 2: GitHub Auto-Deploy
+
 ```bash
 git push
 # Auto-deploys via Netlify integration
 ```
 
-**Option 3: Drag & Drop**
-- Visit https://app.netlify.com/drop
+- Option 3: Drag & Drop
+
+- Visit <https://app.netlify.com/drop>
 - Drag `dist/` folder
 - Instant deployment
 
@@ -124,6 +132,7 @@ npm run version:major
 ```
 
 This updates:
+
 - `package.json`
 - `app.json`
 - `android/app/build.gradle`
@@ -144,7 +153,7 @@ This updates:
 
 ## 🔧 Typical Workflow
 
-### For Google Play Release:
+### For Google Play Release
 
 ```bash
 # 1. Run automated script
@@ -170,7 +179,7 @@ git push && git push --tags
 # 6. Upload to Play Console
 ```
 
-### For Web Update:
+### For Web Update
 
 ```bash
 # 1. Make changes
@@ -204,6 +213,7 @@ netlify deploy --prod  # If using CLI
 ---
 
 **Quick Deploy Commands:**
+
 ```bash
 # Android Auto-Deploy
 ./scripts/deploy-play-store.sh
