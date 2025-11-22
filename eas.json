@@ -36,16 +36,16 @@
 			}
 		}
 	},
-  "submit": {
-    "production": {
-      "android": {
-        "serviceAccountKeyPath": "./woodworkercompanion-a1b4fc1bc259.json",
-        "track": "internal"
-      },
+	"submit": {
+		"production": {
+			"android": {
+				"serviceAccountKeyPath": "./woodworkercompanion-a1b4fc1bc259.json",
+				"track": "internal"
+			},
 			"ios": {
-				"appleId": "your-apple-id@example.com",
-				"ascAppId": "your-app-store-connect-id",
-				"appleTeamId": "your-team-id"
+				"appleId": "jfc3303@gmail.com",
+				"ascAppId": "6755637290",
+				"appleTeamId": "4H66RYB4TY"
 			}
 		}
 	}
