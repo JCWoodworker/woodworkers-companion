@@ -1,0 +1,73 @@
+# Cursor Rules for Woodworker's Companion
+
+## 🧠 Context & Behavior
+
+- **Plan Mode**: For complex requests, ALWAYS creating a comprehensive plan first. Ask the user to confirm before executing code changes.
+- **Clarifying Questions**: If a request is ambiguous or has multiple potential solutions, ASK clarifying questions before starting.
+- **Task Tracking**: Use `todo_write` to manage complex tasks. Keep the user updated on progress.
+- **Documentation**: Update relevant documentation (README.md, etc.) when features are added or changed.
+
+## 🛠️ Environment & Terminal
+
+- **Node Version**: ALWAYS run `nvm use 20` before executing any `npm` or `npx` commands in the terminal.
+  - Example: `source ~/.nvm/nvm.sh && nvm use 20 && npm install ...`
+- **Package Manager**: Use `npm` (not yarn or pnpm).
+- **Expo**: This is an Expo Managed workflow project (mostly).
+  - Use `npx expo` for expo commands.
+  - Be aware of the "bare workflow" hybrid setup (native folders exist).
+
+## 📂 Project Structure & Patterns
+
+- **Router**: Use `expo-router` (file-based routing in `app/`).
+- **Source Code**: All non-route code lives in `src/`.
+  - `src/components`: Reusable UI components.
+  - `src/screens`: Screen-level components (logic & layout).
+  - `src/store`: Zustand stores for state management.
+  - `src/hooks`: Custom React hooks.
+  - `src/utils`: Helper functions and calculations.
+  - `src/theme`: Design system (Paper theme extensions).
+  - `src/types`: TypeScript interfaces and types.
+  - `src/config`: App configuration (feature flags, etc.).
+
+## 💻 Coding Standards
+
+- **TypeScript**: Use strict TypeScript. Avoid `any` whenever possible. Define interfaces for props and data structures.
+- **UI Library**: Use `react-native-paper` for UI components (Material Design 3).
+- **Styling**:
+  - Use `StyleSheet.create` for styles.
+  - Use theme colors from `useTheme()` hook.
+  - Use spacing constants from `@/src/theme`.
+- **Components**:
+  - Prefer functional components.
+  - Use named exports (e.g., `export function MyComponent`).
+  - Keep components small and focused (Code Splitting).
+- **State Management**:
+  - Use `zustand` for global state.
+  - Use `react-query` for async data (if applicable).
+- **File Naming**:
+  - Components: `PascalCase.tsx`
+  - Hooks: `camelCase.ts` (prefix with `use`)
+  - Utilities/Stores: `camelCase.ts`
+
+## 📱 Mobile Specifics
+
+- **Safe Area**: ALWAYS use `usePlatformSafeArea` hook for handling notches and system bars.
+- **Keyboard**: Use `KeyboardAwareScrollView` wrapper for forms.
+- **Navigation**:
+  - Use `router.push/replace/back`.
+  - Ensure `IOSNavigationButtons` are present in layouts/screens where needed.
+- **Permissions**: Handle permissions gracefully (optional features shouldn't block core app).
+
+## 🔒 Features & Privacy
+
+- **Feature Flags**: Check `src/config/features.ts` before adding new feature entry points.
+- **Privacy First**:
+  - All data stored locally (AsyncStorage).
+  - No analytics/tracking code.
+  - No external server calls for user data.
+
+## 📝 Markdown & Documentation
+
+- Keep `README.md`, `PRIVACY_POLICY.md`, and `DEPLOYMENT.md` up to date.
+- Remove temporary markdown files after tasks are complete.
+
