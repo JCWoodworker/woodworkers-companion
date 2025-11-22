@@ -4,15 +4,12 @@ Quick reference for deploying The Woodworker's Companion to all platforms.
 
 ---
 
-## 🆕 New App Listing Strategy
+## 📦 App Identity
 
-We are deploying this as a **brand new app** on both stores to avoid legacy key issues.
+We are deploying as a **new app listing** (V2) to avoid legacy key issues.
 
 - **Package Name**: `com.jfc3303.woodworkerscompanionapp`
-- **Version Code**: Starts at 1
 - **Signing**: Managed automatically by EAS (new keys generated)
-
-**No keystore migration is required.** EAS will handle everything.
 
 ---
 
@@ -23,7 +20,6 @@ We are deploying this as a **brand new app** on both stores to avoid legacy key 
 ```bash
 ./scripts/deploy-play-store.sh
 ```
-
 This script handles version bumping, building, and submitting to the 'internal' track automatically.
 
 ### Manual Build
@@ -39,14 +35,12 @@ npm run build:android:production
 ### Submit to Google Play
 
 1. Go to [Google Play Console](https://play.google.com/console)
-2. **Create App** (New App)
-3. Production (or Testing) → Create Release
+2. Select App: `com.jfc3303.woodworkerscompanionapp`
+3. Testing -> Internal testing -> Create new release
 4. Upload the `.aab` file
-5. Fill in release notes
-6. Submit for review
+5. Save and Review
 
 ### Required for Submission
-
 - ✅ Privacy Policy URL: `https://your-site.netlify.app/privacy-policy`
 - ✅ Screenshots (5-8 images)
 - ✅ Feature graphic (1024×500px)
@@ -97,14 +91,12 @@ npm run preview:web
 ### Deploy to Netlify
 
 **Option 1: CLI**
-
 ```bash
 npm install -g netlify-cli
 netlify deploy --prod
 ```
 
 **Option 2: GitHub Auto-Deploy**
-
 ```bash
 git push
 # Auto-deploys via Netlify integration
@@ -140,7 +132,6 @@ npm run version:major
 ```
 
 This updates:
-
 - `package.json`
 - `app.json`
 - `android/app/build.gradle`
