@@ -27,7 +27,8 @@ npm run build:android:production
 4. Fill in release notes
 5. Submit for review (1-7 days)
 
-### Required for Submission:
+### Required for Submission
+
 - ✅ Privacy Policy URL: `https://your-site.netlify.app/privacy-policy`
 - ✅ Screenshots (5-8 images)
 - ✅ Feature graphic (1024×500px)
@@ -53,19 +54,22 @@ npm run preview:web
 ### Deploy to Netlify
 
 **Option 1: CLI**
+
 ```bash
 npm install -g netlify-cli
 netlify deploy --prod
 ```
 
 **Option 2: GitHub Auto-Deploy**
+
 ```bash
 git push
 # Auto-deploys via Netlify integration
 ```
 
 **Option 3: Drag & Drop**
-- Visit https://app.netlify.com/drop
+
+- Visit <https://app.netlify.com/drop>
 - Drag `dist/` folder
 - Instant deployment
 
@@ -100,6 +104,7 @@ npm run version:major
 ```
 
 This updates:
+
 - `package.json`
 - `app.json`
 - `android/app/build.gradle`
@@ -120,7 +125,7 @@ This updates:
 
 ## 🔧 Typical Workflow
 
-### For Google Play Release:
+### For Google Play Release
 
 ```bash
 # 1. Bump version
@@ -142,7 +147,7 @@ git push && git push --tags
 # 6. Upload to Play Console
 ```
 
-### For Web Update:
+### For Web Update
 
 ```bash
 # 1. Make changes
@@ -176,6 +181,7 @@ netlify deploy --prod  # If using CLI
 ---
 
 **Quick Deploy Commands:**
+
 ```bash
 # Android
 npm run version:patch && npm run build:android:production
@@ -186,4 +192,3 @@ npm run build:web && netlify deploy --prod
 # Both
 npm run version:patch && npm run build:web && npm run build:android:production
 ```
-

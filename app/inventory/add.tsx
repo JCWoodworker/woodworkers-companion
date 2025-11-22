@@ -8,18 +8,17 @@ import { AddHardwareForm } from "@/src/components/inventory/forms/AddHardwareFor
 import { AddLumberForm } from "@/src/components/inventory/forms/AddLumberForm"
 import { AddToolForm } from "@/src/components/inventory/forms/AddToolForm"
 import { useFormState } from "@/src/hooks"
-import { usePlatformSafeArea } from "@/src/hooks/usePlatformSafeArea"
 import { useInventoryStore } from "@/src/store/inventoryStore"
 import { calculatorStyles, spacing } from "@/src/theme"
 import { safeParseFloat } from "@/src/utils"
 import { router, useLocalSearchParams } from "expo-router"
 import React, { useState } from "react"
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { Button, Card, SegmentedButtons, useTheme } from "react-native-paper"
+import { KeyboardAwareScrollView } from "@/src/components/common/KeyboardAwareScrollView"
 
 export default function AddInventoryItemScreen() {
 	const theme = useTheme()
-	const { contentPaddingBottom } = usePlatformSafeArea()
 	const { type: paramType } = useLocalSearchParams<{ type?: string }>()
 	const [itemType, setItemType] = useState<
 		"lumber" | "tool" | "consumable" | "hardware"
@@ -183,18 +182,10 @@ export default function AddInventoryItemScreen() {
 	}
 
 	return (
-		<KeyboardAvoidingView
-			style={styles.container}
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
-			keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+		<View
+			style={[styles.container, { backgroundColor: theme.colors.background }]}
 		>
-			<View
-				style={[styles.container, { backgroundColor: theme.colors.background }]}
-			>
-				<ScrollView
-					contentContainerStyle={[styles.content, { paddingBottom: contentPaddingBottom + spacing.xl }]}
-					keyboardShouldPersistTaps="handled"
-				>
+			<KeyboardAwareScrollView contentContainerStyle={styles.content}>
 				<SegmentedButtons
 					value={itemType}
 					onValueChange={(value) => setItemType(value as any)}
@@ -232,9 +223,8 @@ export default function AddInventoryItemScreen() {
 						Add to Inventory
 					</Button>
 				</View>
-				</ScrollView>
-			</View>
-		</KeyboardAvoidingView>
+			</KeyboardAwareScrollView>
+		</View>
 	)
 }
 
