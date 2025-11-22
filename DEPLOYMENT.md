@@ -4,26 +4,15 @@ Quick reference for deploying The Woodworker's Companion to all platforms.
 
 ---
 
-## 🔑 Important: Overwriting an Existing App
+## 🆕 New App Listing Strategy
 
-If you are updating an app that is already on the Google Play Store but was built from a different repository or project:
+We are deploying this as a **brand new app** on both stores to avoid legacy key issues.
 
-**You MUST sign the new version with the SAME keystore as the original app.**
+- **Package Name**: `com.jfc3303.woodworkerscompanionapp`
+- **Version Code**: Starts at 1
+- **Signing**: Managed automatically by EAS (new keys generated)
 
-### If you used EAS Build before
-
-1. Link this project to the **same Expo Project ID** in `app.json`.
-2. Run `eas build` - EAS will automatically use the stored credentials.
-
-### If you have the keystore file (.jks or .keystore)
-
-1. Run `eas credentials`
-2. Select "Android" > "Production" > "Keystore: Upload your own"
-3. Follow the prompts to upload your original keystore file, alias, and passwords.
-
-### If you LOST the keystore
-
-You must contact Google Play Support to reset your upload key. You cannot simply upload a new app with a different key; Google will reject it.
+**No keystore migration is required.** EAS will handle everything.
 
 ---
 
@@ -50,10 +39,11 @@ npm run build:android:production
 ### Submit to Google Play
 
 1. Go to [Google Play Console](https://play.google.com/console)
-2. Production (or Testing) → Create Release
-3. Upload the `.aab` file
-4. Fill in release notes
-5. Submit for review (1-7 days)
+2. **Create App** (New App)
+3. Production (or Testing) → Create Release
+4. Upload the `.aab` file
+5. Fill in release notes
+6. Submit for review
 
 ### Required for Submission
 
@@ -64,6 +54,31 @@ npm run build:android:production
 - ✅ Contact email
 
 **See `GOOGLE_PLAY_GUIDE.md` for Data Safety form details**
+
+---
+
+## 🍎 iOS (App Store)
+
+### One-Step Build & Submit
+
+```bash
+./scripts/deploy-app-store.sh
+```
+
+### Manual Build
+
+```bash
+# Build for App Store
+npm run build:ios:production
+```
+
+### Submit to App Store Connect
+
+1. Go to [App Store Connect](https://appstoreconnect.apple.com)
+2. **Create New App**
+   - Bundle ID: `com.jfc3303.woodworkerscompanionapp`
+3. Upload build via Transporter or EAS auto-submit
+4. Submit for TestFlight or App Store review
 
 ---
 
@@ -81,37 +96,30 @@ npm run preview:web
 
 ### Deploy to Netlify
 
-- Option 1: CLI
+**Option 1: CLI**
 
 ```bash
 npm install -g netlify-cli
 netlify deploy --prod
 ```
 
-- Option 2: GitHub Auto-Deploy
+**Option 2: GitHub Auto-Deploy**
 
 ```bash
 git push
 # Auto-deploys via Netlify integration
 ```
 
-- Option 3: Drag & Drop
-
-- Visit <https://app.netlify.com/drop>
-- Drag `dist/` folder
-- Instant deployment
-
 **Result**: Live at `https://your-site.netlify.app`
 
 ---
 
-## 🍎 iOS (App Store) - Future
+## 🚢 Master Deployment (All Platforms)
+
+Deploy to Android, iOS, and Web simultaneously:
 
 ```bash
-# Build for App Store
-npm run build:ios:production
-
-# Submit via Xcode or Transporter
+./scripts/ship-it.sh
 ```
 
 ---
@@ -140,84 +148,8 @@ This updates:
 
 ---
 
-## 📦 Build Types
-
-| Command | Output | Use For |
-|---------|--------|---------|
-| `build:android:apk` | APK | Testing, sharing |
-| `build:android:production` | AAB | **Google Play** ✅ |
-| `build:web` | Static HTML | **Netlify** ✅ |
-| `build:ios:production` | IPA | App Store |
-
----
-
-## 🔧 Typical Workflow
-
-### For Google Play Release
-
-```bash
-# 1. Run automated script
-./scripts/deploy-play-store.sh
-
-# OR Manual steps:
-# 1. Bump version
-npm run version:patch
-
-# 2. Commit version bump
-git add -A
-git commit -m "chore: bump version to 1.0.2"
-git tag v1.0.2
-
-# 3. Build for Android
-npm run build:android:production
-
-# 4. Push to git
-git push && git push --tags
-
-# 5. Download AAB from Expo when ready
-
-# 6. Upload to Play Console
-```
-
-### For Web Update
-
-```bash
-# 1. Make changes
-# 2. Test locally
-npm run build:web
-npm run preview:web
-
-# 3. Deploy
-git push  # If using GitHub auto-deploy
-# OR
-netlify deploy --prod  # If using CLI
-```
-
----
-
-## 🌐 URLs After Deployment
-
-- **Web App**: `https://your-site.netlify.app`
-- **Privacy Policy**: `https://your-site.netlify.app/privacy-policy`
-- **Expo Dashboard**: `https://expo.dev`
-- **Play Console**: `https://play.google.com/console`
-
----
-
 ## 📚 Additional Resources
 
 - **Google Play Guide**: `GOOGLE_PLAY_GUIDE.md` - Data Safety form details
 - **Privacy Policy**: `PRIVACY_POLICY.md` - Full legal document
 - **README**: `README.md` - Project documentation
-
----
-
-**Quick Deploy Commands:**
-
-```bash
-# Android Auto-Deploy
-./scripts/deploy-play-store.sh
-
-# Web
-npm run build:web && netlify deploy --prod
-```
