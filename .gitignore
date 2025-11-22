@@ -28,8 +28,6 @@ android/app/.cxx/
 android/build/
 android/.gradle/
 android/captures/
-android/gradle/
-!android/gradle/wrapper/gradle-wrapper.jar
 android/local.properties
 *.apk
 *.aab
