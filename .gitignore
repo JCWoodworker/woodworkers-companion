@@ -79,6 +79,9 @@ lerna-debug.log*
 # Misc
 .DS_Store
 *.pem
+
+#iOS
+ios/
 *.log
 *.pid
 *.seed
