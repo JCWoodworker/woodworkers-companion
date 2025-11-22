@@ -1,4 +1,4 @@
-package com.jfc3303.woodworkerscompanion
+package com.jfc3303.woodworkerscompanionapp
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.jfc3303.woodworkerscompanion'
+    namespace 'com.jfc3303.woodworkerscompanionapp'
     defaultConfig {
-        applicationId 'com.jfc3303.woodworkerscompanion'
+        applicationId 'com.jfc3303.woodworkerscompanionapp'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3

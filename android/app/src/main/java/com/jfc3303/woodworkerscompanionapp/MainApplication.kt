@@ -1,4 +1,4 @@
-package com.jfc3303.woodworkerscompanion
+package com.jfc3303.woodworkerscompanionapp
 
 import android.app.Application
 import android.content.res.Configuration
