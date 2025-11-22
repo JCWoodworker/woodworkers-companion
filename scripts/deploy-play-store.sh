@@ -58,15 +58,16 @@ echo ""
 read -p "Ready to proceed? (y/n): " confirm_submit
 
 if [ "$confirm_submit" = "y" ]; then
-  # Check for service account key
-  if [ ! -f "google-play-service-account.json" ]; then
-    echo -e "${YELLOW}⚠️  google-play-service-account.json not found.${NC}"
-    echo "You will need to log in interactively via EAS CLI."
+  # Check for service account key (any json file starting with woodworkercompanion-)
+  if ! ls woodworkercompanion-*.json 1> /dev/null 2>&1; then
+    echo -e "${YELLOW}⚠️  Service account key not found (woodworkercompanion-*.json).${NC}"
+    echo "You may need to log in interactively via EAS CLI."
   fi
 
   # Build and submit
   # We use --auto-submit to trigger submission after build
-  eas build --platform android --profile production --auto-submit
+  # We use --clear-cache to ensure package name changes are picked up
+  eas build --platform android --profile production --auto-submit --clear-cache
 else
   echo "Cancelled."
   exit 0
