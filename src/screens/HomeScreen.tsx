@@ -1,19 +1,18 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Pressable } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Text, useTheme, Icon } from 'react-native-paper';
 import { router } from 'expo-router';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { APP_NAME, APP_TAGLINE } from '@/src/constants';
 import { spacing, touchTargets } from '@/src/theme';
-import { haptics } from '@/src/theme/animations';
-import { accessibleButton } from '@/src/theme/accessibility';
+import { FeatureCard } from '@/src/components/common/FeatureCard';
+import { FeatureId } from '@/src/config/features';
 
 interface CalculatorCardProps {
   title: string;
   description: string;
   icon: string;
   route: string;
-  disabled?: boolean;
+  featureId: FeatureId;
 }
 
 const CalculatorCard: React.FC<CalculatorCardProps> = ({
@@ -21,71 +20,38 @@ const CalculatorCard: React.FC<CalculatorCardProps> = ({
   description,
   icon,
   route,
-  disabled = false,
+  featureId,
 }) => {
   const theme = useTheme();
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const handlePressIn = () => {
-    if (!disabled) {
-      scale.value = withSpring(0.97, { damping: 15, stiffness: 400 });
-    }
-  };
-
-  const handlePressOut = () => {
-    scale.value = withSpring(1, { damping: 15, stiffness: 400 });
-  };
-
-  const handlePress = async () => {
-    if (!disabled) {
-      await haptics.light();
-      router.push(route as any);
-    }
-  };
 
   return (
-    <Animated.View style={animatedStyle}>
-      <Pressable
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        onPress={handlePress}
-        disabled={disabled}
-        {...accessibleButton(title, disabled ? 'Coming soon' : description)}
-        style={{ minHeight: touchTargets.minimum }}
+    <FeatureCard
+      featureId={featureId}
+      onPress={() => router.push(route as any)}
+      style={{ marginBottom: spacing.md }}
+    >
+      <Card
+        style={[
+          styles.card,
+          { backgroundColor: theme.colors.surface },
+        ]}
+        mode="elevated"
       >
-        <Card
-          style={[
-            styles.card,
-            disabled && { opacity: 0.5 },
-            { backgroundColor: theme.colors.surface },
-          ]}
-          mode="elevated"
-        >
-          <Card.Content style={styles.cardContent}>
-            <View style={styles.iconContainer}>
-              <Icon source={icon} size={40} color={theme.colors.primary} />
-            </View>
-            <View style={styles.textContainer}>
-              <Text variant="titleMedium" style={styles.cardTitle}>
-                {title}
-              </Text>
-              <Text variant="bodyMedium" style={styles.cardDescription}>
-                {description}
-              </Text>
-              {disabled && (
-                <Text variant="bodySmall" style={styles.comingSoon}>
-                  Coming Soon
-                </Text>
-              )}
-            </View>
-          </Card.Content>
-        </Card>
-      </Pressable>
-    </Animated.View>
+        <Card.Content style={styles.cardContent}>
+          <View style={styles.iconContainer}>
+            <Icon source={icon} size={40} color={theme.colors.primary} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text variant="titleMedium" style={styles.cardTitle}>
+              {title}
+            </Text>
+            <Text variant="bodyMedium" style={styles.cardDescription}>
+              {description}
+            </Text>
+          </View>
+        </Card.Content>
+      </Card>
+    </FeatureCard>
   );
 };
 
@@ -118,6 +84,7 @@ export default function HomeScreen() {
           description="Calculate lumber volume, costs, and apply waste factors"
           icon="hammer-wrench"
           route="/calculators/board-foot"
+          featureId="calculator_board_foot"
         />
 
         <CalculatorCard
@@ -125,6 +92,7 @@ export default function HomeScreen() {
           description="Precision math for tape measure measurements"
           icon="ruler"
           route="/calculators/fraction"
+          featureId="calculator_fraction"
         />
 
         <CalculatorCard
@@ -132,6 +100,7 @@ export default function HomeScreen() {
           description="Calculate costs and generate professional quotes"
           icon="currency-usd"
           route="/calculators/pricing"
+          featureId="calculator_pricing"
         />
       </View>
 
@@ -146,6 +115,7 @@ export default function HomeScreen() {
           description="Minimize waste with optimized cutting diagrams"
           icon="content-cut"
           route="/calculators/cut-list"
+          featureId="calculator_cut_list"
         />
 
         <CalculatorCard
@@ -153,6 +123,7 @@ export default function HomeScreen() {
           description="Predict seasonal expansion and contraction"
           icon="swap-horizontal"
           route="/calculators/wood-movement"
+          featureId="calculator_wood_movement"
         />
 
         <CalculatorCard
@@ -160,6 +131,7 @@ export default function HomeScreen() {
           description="Perfect ratios for shellac and custom finishes"
           icon="palette"
           route="/calculators/finish-mixing"
+          featureId="calculator_finish_mixing"
         />
       </View>
 
@@ -174,6 +146,7 @@ export default function HomeScreen() {
           description="Track tasks, time, and expenses for your builds"
           icon="clipboard-text"
           route="/projects"
+          featureId="module_projects"
         />
 
         <CalculatorCard
@@ -181,6 +154,7 @@ export default function HomeScreen() {
           description="Manage lumber, tools, and materials"
           icon="warehouse"
           route="/inventory"
+          featureId="module_inventory"
         />
 
         <CalculatorCard
@@ -188,6 +162,7 @@ export default function HomeScreen() {
           description="CRM and professional documents"
           icon="account-group"
           route="/clients"
+          featureId="module_clients"
         />
       </View>
     </ScrollView>

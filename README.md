@@ -24,6 +24,12 @@ A comprehensive mobile app providing essential calculators, advanced material sc
 - **Client Management** - Contact info, project history, notes
 - **Quoting System** - Professional quotes with material/labor breakdowns
 
+### 🔒 Feature Toggles
+For the initial release, some features are marked as "In Development".
+- **Enabled**: Board Foot Calculator
+- **Coming Soon**: Fraction Calculator, Pricing, Cut List, Wood Movement, Finish Mixing, Projects, Inventory, Clients
+- **Developer Mode**: Edit `src/config/features.ts` to enable features locally.
+
 ---
 
 ## 🚀 Quick Start
@@ -51,6 +57,24 @@ npm run android
 # Web
 npm run web
 ```
+
+### Development & Testing
+To test the app locally on your computer:
+
+**iOS Simulator**:
+1. Open Xcode
+2. Go to Xcode > Open Developer Tool > Simulator
+3. Run `npm run ios`
+
+**Android Emulator**:
+1. Open Android Studio
+2. Launch Virtual Device Manager
+3. Start a device
+4. Run `npm run android`
+
+**Web Preview**:
+1. Run `npm run web`
+2. Open http://localhost:8081
 
 ---
 
@@ -192,6 +216,8 @@ npm run build:local:android
 ---
 
 ## 🔢 Version Management
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for full version management and deployment instructions.
 
 ### Bump Version
 
