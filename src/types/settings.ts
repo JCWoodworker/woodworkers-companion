@@ -2,7 +2,7 @@
  * Settings and user preferences type definitions
  */
 
-export type ComplexityMode = 'hobbyist' | 'professional' | 'custom';
+export type ComplexityMode = 'hobbyist' | 'professional' | 'lumberyard' | 'custom';
 
 export interface InventorySettings {
   // Enabled categories
@@ -271,5 +271,85 @@ export const DEFAULT_PROFESSIONAL_SETTINGS: InventorySettings = {
   defaultSortBy: 'dateAdded',
   defaultSortOrder: 'desc',
   showEmptyCategories: true,
+};
+
+export const DEFAULT_LUMBERYARD_SETTINGS: InventorySettings = {
+  enabledCategories: {
+    lumber: true,
+    tools: true,
+    consumables: true,
+    hardware: true,
+    custom: false,
+  },
+  lumberFields: {
+    thickness: true,
+    width: true,
+    length: true,
+    boardFeet: true,
+    costPerBF: true,
+    location: true,
+    notes: true,
+    moistureContent: true, // Important for lumber yards
+    supplier: true,
+    purchaseDate: true,
+    individualBoards: true,
+    barcode: true,
+    photos: true,
+  },
+  toolFields: {
+    category: false,
+    brand: true,
+    model: true,
+    serialNumber: true,
+    purchaseDate: true,
+    purchasePrice: true,
+    location: true,
+    condition: true,
+    lastMaintenance: false,
+    nextMaintenance: false,
+    maintenanceNotes: false,
+    barcode: true,
+    photos: false,
+  },
+  consumableFields: {
+    category: true,
+    unit: true,
+    quantity: true,
+    costPerUnit: true,
+    reorderLevel: true,
+    supplier: true,
+    location: true,
+    expirationDate: false,
+    barcode: true,
+    photos: false,
+  },
+  hardwareFields: {
+    category: true,
+    size: true,
+    material: true,
+    finish: true,
+    quantity: true,
+    unit: true,
+    costPerUnit: true,
+    reorderLevel: true,
+    supplier: true,
+    location: true,
+    barcode: true,
+    photos: false,
+  },
+  features: {
+    analytics: true,
+    barcodeScanning: true,
+    photoAttachments: false,
+    projectIntegration: true,
+    importExport: true,
+    customCategories: false,
+    lowStockAlerts: true,
+    maintenanceTracking: false,
+  },
+  defaultView: 'list',
+  defaultSortBy: 'dateAdded',
+  defaultSortOrder: 'desc',
+  showEmptyCategories: false,
 };
 

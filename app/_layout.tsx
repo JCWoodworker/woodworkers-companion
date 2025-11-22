@@ -6,6 +6,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
 import { PaperProvider } from 'react-native-paper';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useEffect } from 'react';
 import {
   useFonts,
@@ -18,6 +19,7 @@ import {
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { lightTheme, darkTheme } from '@/src/theme';
 import { queryClient } from '@/src/services/queryClient';
+import { IOSNavigationButtons } from '@/src/components/common/IOSNavigationButtons';
 
 // Keep the splash screen visible while we load fonts
 SplashScreen.preventAutoHideAsync();
@@ -47,10 +49,11 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <PaperProvider theme={paperTheme}>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack>
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <PaperProvider theme={paperTheme}>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="home" options={{ headerShown: false }} />
             <Stack.Screen name="calculators" options={{ headerShown: false }} />
@@ -66,10 +69,12 @@ export default function RootLayout() {
                 headerShown: true,
               }} 
             />
-          </Stack>
-          <StatusBar style="auto" />
-        </ThemeProvider>
-      </PaperProvider>
-    </QueryClientProvider>
+            </Stack>
+            <IOSNavigationButtons />
+            <StatusBar style="auto" />
+          </ThemeProvider>
+        </PaperProvider>
+      </QueryClientProvider>
+    </SafeAreaProvider>
   );
 }

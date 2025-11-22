@@ -17,6 +17,8 @@ const STORAGE_KEYS = {
   INVOICES: '@woodworkers_companion:invoices',
   USER_PREFERENCES: '@woodworkers_companion:preferences',
   APP_SETTINGS: '@woodworkers_companion:app_settings',
+  BOARD_FOOT_CURRENT_LIST: '@woodworkers_companion:boardfoot_current_list',
+  BOARD_FOOT_SAVED_LISTS: '@woodworkers_companion:boardfoot_saved_lists',
 } as const;
 
 export { STORAGE_KEYS };

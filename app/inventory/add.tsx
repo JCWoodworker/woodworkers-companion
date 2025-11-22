@@ -13,8 +13,9 @@ import { calculatorStyles, spacing } from "@/src/theme"
 import { safeParseFloat } from "@/src/utils"
 import { router, useLocalSearchParams } from "expo-router"
 import React, { useState } from "react"
-import { ScrollView, StyleSheet, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { Button, Card, SegmentedButtons, useTheme } from "react-native-paper"
+import { KeyboardAwareScrollView } from "@/src/components/common/KeyboardAwareScrollView"
 
 export default function AddInventoryItemScreen() {
 	const theme = useTheme()
@@ -184,7 +185,7 @@ export default function AddInventoryItemScreen() {
 		<View
 			style={[styles.container, { backgroundColor: theme.colors.background }]}
 		>
-			<ScrollView contentContainerStyle={styles.content}>
+			<KeyboardAwareScrollView contentContainerStyle={styles.content}>
 				<SegmentedButtons
 					value={itemType}
 					onValueChange={(value) => setItemType(value as any)}
@@ -222,7 +223,7 @@ export default function AddInventoryItemScreen() {
 						Add to Inventory
 					</Button>
 				</View>
-			</ScrollView>
+			</KeyboardAwareScrollView>
 		</View>
 	)
 }
@@ -233,7 +234,6 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		padding: spacing.base,
-		paddingBottom: spacing.xl,
 	},
 	typeSwitcher: {
 		marginBottom: spacing.lg,

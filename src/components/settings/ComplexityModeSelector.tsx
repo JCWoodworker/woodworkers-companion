@@ -20,10 +20,10 @@ export function ComplexityModeSelector({ value, onChange }: Props) {
   return (
     <View style={styles.container}>
       <Text variant="titleMedium" style={styles.title}>
-        Complexity Mode
+        User Type
       </Text>
       <Text variant="bodyMedium" style={[styles.description, { color: theme.colors.onSurfaceVariant }]}>
-        Choose how much detail you want across the app
+        Choose your workflow - features adapt automatically
       </Text>
 
       <Card style={styles.card} mode="outlined" onPress={() => onChange('hobbyist')}>
@@ -57,6 +57,24 @@ export function ComplexityModeSelector({ value, onChange }: Props) {
               value="professional"
               status={value === 'professional' ? 'checked' : 'unchecked'}
               onPress={() => onChange('professional')}
+            />
+          </View>
+        </Card.Content>
+      </Card>
+
+      <Card style={styles.card} mode="outlined" onPress={() => onChange('lumberyard')}>
+        <Card.Content style={styles.cardContent}>
+          <View style={styles.cardHeader}>
+            <View style={styles.cardText}>
+              <Text variant="titleMedium">🏭 Lumber Yard</Text>
+              <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
+                Commercial sales focus. Client tracking, orders, delivery status, and grade/moisture tracking.
+              </Text>
+            </View>
+            <RadioButton
+              value="lumberyard"
+              status={value === 'lumberyard' ? 'checked' : 'unchecked'}
+              onPress={() => onChange('lumberyard')}
             />
           </View>
         </Card.Content>

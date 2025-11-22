@@ -4,9 +4,10 @@
  */
 
 import React, { ReactNode } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useCalculatorScreen } from '@/src/hooks/useCalculatorScreen';
+import { KeyboardAwareScrollView } from '@/src/components/common/KeyboardAwareScrollView';
 import { spacing, touchTargets } from '@/src/theme';
 import { haptics } from '@/src/theme/animations';
 
@@ -41,7 +42,7 @@ export const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({
   };
 
   return (
-    <ScrollView
+    <KeyboardAwareScrollView
       style={[styles.container, { backgroundColor }]}
       contentContainerStyle={styles.contentContainer}
     >
@@ -67,7 +68,7 @@ export const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({
           Reset
         </Button>
       </View>
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -77,7 +78,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: spacing.base,
-    paddingBottom: spacing.xl,
   },
   buttonContainer: {
     gap: spacing.md,

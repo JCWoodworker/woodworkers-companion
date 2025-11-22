@@ -4,7 +4,7 @@
  */
 
 import { create } from 'zustand';
-import { AppSettings, ComplexityMode, InventorySettings, DEFAULT_HOBBYIST_SETTINGS, DEFAULT_PROFESSIONAL_SETTINGS } from '@/src/types/settings';
+import { AppSettings, ComplexityMode, InventorySettings, DEFAULT_HOBBYIST_SETTINGS, DEFAULT_PROFESSIONAL_SETTINGS, DEFAULT_LUMBERYARD_SETTINGS } from '@/src/types/settings';
 import { saveData, loadData, STORAGE_KEYS } from '@/src/services/storage';
 
 const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -52,6 +52,8 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
       ? DEFAULT_HOBBYIST_SETTINGS 
       : mode === 'professional'
       ? DEFAULT_PROFESSIONAL_SETTINGS
+      : mode === 'lumberyard'
+      ? DEFAULT_LUMBERYARD_SETTINGS
       : state.inventory; // Keep current settings for custom mode
 
     const newSettings: AppSettings = {
@@ -125,10 +127,19 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
 
   resetToDefaults: (mode) => {
     const targetMode = mode || get().complexityMode;
+    const getDefaultSettings = () => {
+      switch (targetMode) {
+        case 'hobbyist': return DEFAULT_HOBBYIST_SETTINGS;
+        case 'professional': return DEFAULT_PROFESSIONAL_SETTINGS;
+        case 'lumberyard': return DEFAULT_LUMBERYARD_SETTINGS;
+        default: return DEFAULT_HOBBYIST_SETTINGS;
+      }
+    };
+    
     const newSettings: AppSettings = {
       ...DEFAULT_APP_SETTINGS,
       complexityMode: targetMode,
-      inventory: targetMode === 'hobbyist' ? DEFAULT_HOBBYIST_SETTINGS : DEFAULT_PROFESSIONAL_SETTINGS,
+      inventory: getDefaultSettings(),
       hasCompletedOnboarding: get().hasCompletedOnboarding,
     };
     

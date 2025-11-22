@@ -31,7 +31,7 @@ export default function InventorySettingsScreen() {
         {!isCustomMode && (
           <View style={styles.notice}>
             <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
-              You're in {complexityMode} mode. Switch to Custom mode in the main settings to adjust individual features.
+              You're in {complexityMode === 'lumberyard' ? 'lumber yard' : complexityMode} mode. Switch to Custom mode in the main settings to adjust individual features.
             </Text>
           </View>
         )}

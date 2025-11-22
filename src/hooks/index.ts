@@ -12,3 +12,4 @@ export * from './useInventorySort';
 export * from './useWizardState';
 export * from './useIndividualBoards';
 export * from './useProjectMaterials';
+export * from './usePlatformSafeArea';

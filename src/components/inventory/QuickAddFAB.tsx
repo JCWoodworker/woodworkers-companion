@@ -9,6 +9,7 @@ import { FAB, Portal } from 'react-native-paper';
 import { router } from 'expo-router';
 import { spacing } from '@/src/theme';
 import { useCategorySettings } from '@/src/hooks/useCategorySettings';
+import { usePlatformSafeArea } from '@/src/hooks/usePlatformSafeArea';
 
 interface Props {
   defaultCategory?: 'lumber' | 'tools' | 'consumables' | 'hardware' | 'custom';
@@ -17,6 +18,7 @@ interface Props {
 export function QuickAddFAB({ defaultCategory }: Props) {
   const [open, setOpen] = useState(false);
   const { isCategoryEnabled } = useCategorySettings();
+  const { fabBottom } = usePlatformSafeArea();
 
   const onStateChange = ({ open }: { open: boolean }) => setOpen(open);
 
@@ -73,7 +75,7 @@ export function QuickAddFAB({ defaultCategory }: Props) {
     return (
       <FAB
         icon="plus"
-        style={styles.fab}
+        style={[styles.fab, { bottom: fabBottom }]}
         onPress={() => {
           if (defaultCategory) {
             router.push(`/inventory/add?type=${defaultCategory}` as any);
@@ -94,7 +96,7 @@ export function QuickAddFAB({ defaultCategory }: Props) {
         icon={open ? 'close' : 'plus'}
         actions={actions}
         onStateChange={onStateChange}
-        style={styles.fabGroup}
+        fabStyle={{ bottom: fabBottom }}
       />
     </Portal>
   );
@@ -104,10 +106,6 @@ const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
     right: spacing.base,
-    bottom: spacing.base,
-  },
-  fabGroup: {
-    paddingBottom: spacing.base,
   },
 });
 
